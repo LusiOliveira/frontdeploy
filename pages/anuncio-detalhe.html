@@ -674,6 +674,8 @@
     </footer>
 
     <script src="../scripts/api-service.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
     <!-- Modal Denúncia -->
     <div class="denuncia-overlay hidden" id="modal-denuncia">
         <div class="denuncia-modal">
@@ -760,6 +762,7 @@
         }
 
         function renderMessages(msgs, myEmail, containerEl) {
+            const atBottom = containerEl.scrollTop + containerEl.clientHeight >= containerEl.scrollHeight - 40;
             if (!msgs || msgs.length === 0) {
                 containerEl.innerHTML = `
                     <div class="chat-empty-state">
@@ -775,7 +778,7 @@
                     <span class="chat-hora">${isMine ? 'Você' : escapeHtml(m.remetente_nome || m.remetente_email)} · ${formatHora(m.created_at)}</span>
                 </div>`;
             }).join('');
-            containerEl.scrollTop = containerEl.scrollHeight;
+            if (atBottom) containerEl.scrollTop = containerEl.scrollHeight;
         }
 
         // ---- Main init ----
@@ -1124,6 +1127,29 @@
                     input.focus();
                 }
             }
+
+            // ── WebSocket realtime ──
+            let stompClient = null;
+            try {
+                const wsSocket = new SockJS(API_BASE + '/ws');
+                stompClient = Stomp.over(wsSocket);
+                stompClient.debug = null;
+                stompClient.connect({}, function () {
+                    stompClient.subscribe('/topic/mensagens/' + anuncioId, function () {
+                        if (isOwner && activeContactEmail) {
+                            window.SupabaseService.getMensagens(anuncioId, session.email, activeContactEmail)
+                                .then(msgs => renderMessages(msgs, session.email, document.getElementById('chat-messages-owner')))
+                                .catch(() => {});
+                        } else if (!isOwner && ownerEmail) {
+                            loadUserChat().catch(() => {});
+                        }
+                    });
+                }, function () {});
+            } catch (_) {}
+
+            window.addEventListener('beforeunload', () => {
+                if (stompClient && stompClient.connected) stompClient.disconnect();
+            });
 
         })(); // end init
     </script>
