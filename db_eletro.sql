@@ -205,11 +205,14 @@ INSERT INTO grupo (id_grupo, descricao) VALUES
 
 -- Categorias de eletronicos disponiveis para anuncio
 INSERT INTO categoria (id_categoria, slug, nome, icone) VALUES
-(1, 'smartphones', 'Smartphones', 'smartphone'),
-(2, 'tablets', 'Tablets', 'tablet'),
-(3, 'notebooks', 'Notebooks', 'laptop'),
-(4, 'desktops', 'Desktops', 'desktop'),
-(5, 'monitores', 'Monitores', 'monitor'),
-(6, 'perifericos', 'Perifericos', 'mouse'),
-(7, 'acessorios', 'Acessorios', 'headset'),
-(8, 'outros', 'Outros', 'devices');
+(1, 'celulares', 'Celulares e Smartphones', 'smartphone'),
+(2, 'tablets', 'Tablets e E-readers', 'tablet'),
+(3, 'notebooks', 'Notebooks e Computadores', 'laptop'),
+(4, 'tvs', 'TVs e Monitores', 'monitor'),
+(5, 'audio', 'Audio e Video', 'headset'),
+(6, 'videogames', 'Videogames e Consoles', 'gamepad'),
+(7, 'eletrodomesticos', 'Eletrodomesticos', 'electrical_services'),
+(8, 'cabos', 'Cabos e Carregadores', 'cable'),
+(9, 'pilhas', 'Pilhas e Baterias', 'battery_4_bar'),
+(10, 'perifericos', 'Perifericos', 'mouse'),
+(11, 'outros', 'Outros', 'devices');

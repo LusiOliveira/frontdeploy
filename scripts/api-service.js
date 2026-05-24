@@ -166,19 +166,33 @@ async function deletarAnuncio(id) {
 // MENSAGENS
 // ============================================
 
+function normalizeMensagem(m) {
+    if (!m) return m;
+    return {
+        ...m,
+        remetente_email:     m.remetenteEmail     || m.remetente_email,
+        remetente_nome:      m.remetenteNome      || m.remetente_nome,
+        destinatario_email:  m.destinatarioEmail  || m.destinatario_email,
+        destinatario_nome:   m.destinatarioNome   || m.destinatario_nome,
+        created_at:          m.dataCriacao        || m.created_at
+    };
+}
+
 async function getMensagens(anuncioId, emailA, emailB) {
     const url = '/mensagens/conversa?emailA=' + encodeURIComponent(emailA.toLowerCase()) +
                 '&emailB=' + encodeURIComponent(emailB.toLowerCase()) +
                 (anuncioId ? '&anuncioId=' + anuncioId : '');
-    return apiFetch(url);
+    const lista = await apiFetch(url);
+    return (lista || []).map(normalizeMensagem);
 }
 
 async function getConversasDoAnuncio(anuncioId, ownerEmail) {
-    const mensagens = await apiFetch('/mensagens/anuncio/' + anuncioId);
+    const raw = await apiFetch('/mensagens/anuncio/' + anuncioId);
+    const mensagens = (raw || []).map(normalizeMensagem);
     const pessoas = {};
     mensagens.forEach(m => {
-        const outroEmail = m.remetenteEmail === ownerEmail.toLowerCase() ? m.destinatarioEmail : m.remetenteEmail;
-        const outroNome  = m.remetenteEmail === ownerEmail.toLowerCase() ? (m.destinatarioNome || outroEmail) : (m.remetenteNome || m.remetenteEmail);
+        const outroEmail = m.remetente_email === ownerEmail.toLowerCase() ? m.destinatario_email : m.remetente_email;
+        const outroNome  = m.remetente_email === ownerEmail.toLowerCase() ? (m.destinatario_nome || outroEmail) : (m.remetente_nome || m.remetente_email);
         if (outroEmail !== ownerEmail.toLowerCase()) pessoas[outroEmail] = outroNome;
     });
     return Object.entries(pessoas).map(([email, nome]) => ({ email, nome }));
@@ -216,12 +230,33 @@ async function rejeitarAnuncio(id) {
 // ADMIN — Denúncias
 // ============================================
 
+function normalizeDenuncia(d) {
+    if (!d) return d;
+    return {
+        ...d,
+        alvo_email:        d.alvoEmail        || d.alvo_email,
+        alvo_titulo:       d.alvoTitulo       || d.alvo_titulo,
+        denunciante_email: d.denuncianteEmail || d.denunciante_email,
+        created_at:        d.dataCriacao      || d.created_at
+    };
+}
+
 async function getDenuncias() {
-    return apiFetch('/denuncias');
+    const lista = await apiFetch('/denuncias');
+    return (lista || []).map(normalizeDenuncia);
 }
 
 async function enviarDenuncia(denuncia) {
-    return apiFetch('/denuncias', { method: 'POST', body: denuncia });
+    const payload = {
+        tipo:              denuncia.tipo,
+        alvoEmail:         denuncia.alvo_email        || denuncia.alvoEmail,
+        alvoTitulo:        denuncia.alvo_titulo        || denuncia.alvoTitulo,
+        motivo:            denuncia.motivo,
+        descricao:         denuncia.descricao          || null,
+        denuncianteEmail:  denuncia.denunciante_email  || denuncia.denuncianteEmail,
+        status:            denuncia.status             || 'pendente'
+    };
+    return apiFetch('/denuncias', { method: 'POST', body: payload });
 }
 
 async function resolverDenuncia(id) {
