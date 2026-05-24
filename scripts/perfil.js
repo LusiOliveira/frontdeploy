@@ -49,7 +49,8 @@ function marcarErro(el) {
 // --- Preencher dados na tela ---
 async function carregarDados() {
     try {
-        const usuario = await window.SupabaseService.findUserByEmail(session.email);
+        let usuario = session.id ? await window.SupabaseService.findUserById(session.id) : null;
+        if (!usuario) usuario = await window.SupabaseService.findUserByEmail(session.email);
         if (!usuario) return;
 
         // Info fixa
@@ -174,10 +175,11 @@ document.getElementById('perfil-form').addEventListener('submit', async (e) => {
     }
 
     try {
-        // Busca usuário atual no Supabase
-        const usuario = await window.SupabaseService.findUserByEmail(session.email);
+        // Busca usuário atual — prioriza ID da sessão para maior confiabilidade
+        let usuario = session.id ? await window.SupabaseService.findUserById(session.id) : null;
+        if (!usuario) usuario = await window.SupabaseService.findUserByEmail(session.email);
         if (!usuario) {
-            mostrarToast('Usuário não encontrado.', 'erro');
+            mostrarToast('Sessão inválida. Faça login novamente.', 'erro');
             return;
         }
 
@@ -221,8 +223,13 @@ document.getElementById('perfil-form').addEventListener('submit', async (e) => {
             try {
                 await window.SupabaseService.alterarSenha(usuario.id, senhaAtual, senhaNova);
             } catch (err) {
-                marcarErro(document.getElementById('perfil-senha-atual'));
-                mostrarToast('Senha atual incorreta.', 'erro');
+                const msg = (err.message || '').toLowerCase();
+                if (msg.includes('nao encontrado') || msg.includes('n\u00e3o encontrado')) {
+                    mostrarToast('Sessão inválida. Faça login novamente.', 'erro');
+                } else {
+                    marcarErro(document.getElementById('perfil-senha-atual'));
+                    mostrarToast('Senha atual incorreta.', 'erro');
+                }
                 return;
             }
         }

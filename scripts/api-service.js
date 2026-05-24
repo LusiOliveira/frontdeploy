@@ -18,8 +18,14 @@ async function apiFetch(url, options = {}) {
     }
     const res = await fetch(API_BASE + url, opts);
     if (!res.ok) {
-        const text = await res.text().catch(() => res.statusText);
-        throw new Error(text || res.statusText);
+        let errMsg = res.statusText;
+        try {
+            const body = await res.json();
+            errMsg = body.message || body.detail || body.erro || res.statusText;
+        } catch {
+            errMsg = await res.text().catch(() => res.statusText) || res.statusText;
+        }
+        throw new Error(errMsg);
     }
     if (res.status === 204) return null;
     return res.json();
@@ -60,12 +66,12 @@ async function findUserByCPF(cpf) {
 }
 
 async function findUserById(userId) {
+    if (!userId) return null;
     try {
         const u = await apiFetch('/usuarios/' + userId);
         return normalizeUser(u);
     } catch (e) {
-        if (e.message.includes('nao encontrado') || e.message.includes('não encontrado')) return null;
-        throw e;
+        return null;
     }
 }
 
