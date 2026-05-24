@@ -49,8 +49,7 @@ async function findUserByEmail(email) {
         const u = await apiFetch('/usuarios/email/' + encodeURIComponent(email.toLowerCase()));
         return normalizeUser(u);
     } catch (e) {
-        if (e.message.includes('nao encontrado') || e.message.includes('não encontrado')) return null;
-        throw e;
+        return null;
     }
 }
 
