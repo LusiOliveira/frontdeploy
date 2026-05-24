@@ -1,0 +1,668 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+    --primary-color: #059669;
+    --secondary-color: #10B981;
+    --accent-color: #F59E0B;
+    --bg-light: #F7FAFC;
+    --text-dark: #1F2937;
+    --text-light: #64748B;
+    --white: #FFFFFF;
+    --border-soft: #E5E7EB;
+    --shadow-main: 0 20px 45px rgba(15, 23, 42, 0.12);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background:
+        radial-gradient(circle at top left, #c8e04d 0%, transparent 35%),
+        radial-gradient(circle at top right, #0e7490 0%, transparent 40%),
+        radial-gradient(circle at bottom left, #34d399 0%, transparent 40%),
+        radial-gradient(circle at bottom right, #c8e04d 0%, transparent 35%),
+        linear-gradient(135deg, #0d9488 0%, #5eead4 50%, #34d399 100%);
+    background-attachment: fixed;
+    color: var(--text-dark);
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+    padding: 24px;
+}
+
+.btn-voltar {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    text-decoration: none;
+    color: #FFFFFF;
+    font-weight: 600;
+    font-size: 1.23rem;
+    transition: all 0.25s ease;
+}
+
+.btn-voltar:hover {
+    color: #047857;
+    transform: translateX(-2px);
+}
+
+h2 {
+    margin: 0 0 10px;
+    color: var(--text-dark);
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+p {
+    font-size: 0.96rem;
+    line-height: 1.7;
+    margin: 14px 0 24px;
+}
+
+form p {
+    color: var(--text-light);
+}
+
+.overlay-panel p {
+    color: rgba(255, 255, 255, 0.94);
+    max-width: 290px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+a {
+    color: var(--text-dark);
+    font-size: 0.92rem;
+    text-decoration: none;
+    margin: 14px 0;
+}
+
+.forgot-password {
+    color: var(--text-light);
+    transition: color 0.25s ease;
+}
+
+.forgot-password:hover {
+    color: var(--primary-color);
+}
+
+.logo-min {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+    transform: translateY(-5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.logo-min__img {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+    display: block;
+}
+
+button {
+    border-radius: 999px;
+    border: 1px solid var(--primary-color);
+    background: linear-gradient(135deg, var(--primary-color), #047857);
+    color: var(--white);
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 13px 38px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transition: all 0.25s ease;
+    cursor: pointer;
+    margin-top: 12px;
+    box-shadow: 0 10px 20px rgba(5, 150, 105, 0.18);
+}
+
+button:not(.ghost):not(.btn-cancelar):not(.olho-btn):hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 24px rgba(5, 150, 105, 0.22);
+    background: linear-gradient(135deg, #10B981, #059669);
+    border-color: #10B981;
+}
+
+button:not(.ghost):not(.btn-cancelar):not(.olho-btn):active {
+    transform: scale(0.98);
+}
+
+button:focus {
+    outline: none;
+}
+
+button.ghost {
+    background: transparent;
+    border: 1.5px solid rgba(255,255,255,0.92);
+    box-shadow: none;
+}
+
+button.ghost:hover {
+    background: rgba(255,255,255,0.12);
+    border-color: #FFFFFF;
+    transform: translateY(-2px);
+}
+
+form {
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    padding: 0 52px;
+    height: 100%;
+    width: 100%;
+    max-width: 320px;
+}
+
+input {
+    background-color: #F8FAFC;
+    border: 1px solid var(--border-soft);
+    padding: 14px 16px;
+    margin: 8px 0;
+    width: 100%;
+    border-radius: 12px;
+    color: var(--text-dark);
+    font-size: 0.95rem;
+    transition: all 0.25s ease;
+}
+
+input::placeholder {
+    color: #94A3B8;
+}
+
+input:focus {
+    outline: none;
+    border-color: #10B981;
+    background: #FFFFFF;
+    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.12);
+}
+
+.container {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 24px;
+    box-shadow: var(--shadow-main);
+    position: relative;
+    overflow: hidden;
+    width: 1000px;
+    max-width: 100%;
+    min-height: 720px;
+    border: 1px solid rgba(255,255,255,0.6);
+    animation: fadeUp 0.6s ease;
+}
+
+.form-container {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 50%;
+    background-color: transparent;
+    transition: transform 0.6s ease-in-out, opacity 0.6s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sign-in-container {
+    left: 0;
+    opacity: 1;
+    z-index: 2;
+    pointer-events: all;
+}
+
+.sign-up-container {
+    left: 0;
+    opacity: 0;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.container.right-panel-active .sign-in-container {
+    transform: translateX(100%);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.container.right-panel-active .sign-up-container {
+    transform: translateX(100%);
+    opacity: 1;
+    z-index: 5;
+    pointer-events: all;
+}
+
+.overlay-container {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 50%;
+    height: 100%;
+    overflow: hidden;
+    transition: transform 0.6s ease-in-out;
+    z-index: 100;
+}
+
+.container.right-panel-active .overlay-container {
+    transform: translateX(-100%);
+}
+
+.overlay {
+    background:
+        radial-gradient(circle at top right, rgba(255,255,255,0.18), transparent 28%),
+        linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    color: #FFFFFF;
+    position: relative;
+    left: -100%;
+    height: 100%;
+    width: 200%;
+    transform: translateX(0);
+    transition: transform 0.6s ease-in-out;
+}
+
+.container.right-panel-active .overlay {
+    transform: translateX(50%);
+}
+
+.overlay-panel {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 0 42px;
+    text-align: center;
+    top: 0;
+    height: 100%;
+    width: 50%;
+    transition: transform 0.6s ease-in-out;
+}
+
+.overlay-panel h2 {
+    color: #FFFFFF;
+    font-size: 2.1rem;
+    margin-bottom: 8px;
+}
+
+/* --- MASCOTE --- */
+.mascote-box img {
+    width: 180px;
+}
+
+.robo-login {
+    width: 150px;
+    margin-bottom: 18px;
+    display: block;
+    filter: drop-shadow(0 12px 22px rgba(0, 0, 0, 0.22));
+    animation: flutuar 3.5s ease-in-out infinite;
+    transition: transform 0.25s ease, filter 0.25s ease;
+    will-change: transform;
+}
+
+@keyframes flutuar {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+    100% { transform: translateY(0); }
+}
+
+.overlay-left {
+    left: 0;
+    transform: translateX(-20%);
+}
+
+.container.right-panel-active .overlay-left {
+    transform: translateX(0);
+}
+
+.overlay-right {
+    right: 0;
+    transform: translateX(0);
+}
+
+.container.right-panel-active .overlay-right {
+    transform: translateX(20%);
+}
+
+/* --- ESTILOS DO MODAL DE RECUPERAÇÃO DE SENHA --- */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(15, 23, 42, 0.55);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.modal-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.modal-content {
+    background: #FFFFFF;
+    padding: 34px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 420px;
+    text-align: center;
+    box-shadow: 0 24px 45px rgba(15, 23, 42, 0.22);
+    position: relative;
+    transform: translateY(0);
+    transition: transform 0.3s ease;
+}
+
+.modal-overlay.hidden .modal-content {
+    transform: translateY(-22px);
+}
+
+.modal-content h3 {
+    color: var(--text-dark);
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1.4rem;
+}
+
+.modal-content p {
+    margin-bottom: 20px;
+    color: var(--text-light);
+}
+
+.close-modal {
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    font-size: 1.3rem;
+    color: var(--text-light);
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.close-modal:hover {
+    color: var(--accent-color);
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.modal-buttons button {
+    margin-top: 0;
+    width: 100%;
+    padding: 12px;
+}
+
+.btn-cancelar {
+    background: transparent;
+    border: 1px solid #CBD5E1;
+    color: #64748B;
+    box-shadow: none;
+}
+
+.btn-cancelar:hover {
+    background: #F8FAFC;
+    color: var(--text-dark);
+}
+
+.btn-enviar {
+    background: linear-gradient(135deg, var(--primary-color), #047857);
+    border: 1px solid var(--primary-color);
+}
+
+.btn-enviar:hover {
+    background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+    border-color: var(--secondary-color);
+}
+
+/* --- Toast de feedback --- */
+.toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    padding: 14px 24px;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+    opacity: 0;
+    transition: opacity 0.35s ease, transform 0.35s ease;
+    z-index: 9999;
+    white-space: nowrap;
+}
+.toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+.toast-sucesso { background: #059669; color: #fff; }
+.toast-erro    { background: #DC2626; color: #fff; }
+
+/* --- Borda vermelha nos inputs com erro --- */
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+input.error {
+    border-color: #DC2626 !important;
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.12);
+}
+
+/* --- Wrapper senha + botão olho --- */
+.senha-wrap {
+    position: relative;
+    align-self: stretch;
+    margin: 8px 0;
+}
+.senha-wrap input {
+    width: 100%;
+    box-sizing: border-box;
+    padding-right: 42px;
+    margin: 0 !important;
+}
+
+/* Hide native browser password reveal button */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-webkit-credentials-auto-fill-button {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+}
+
+/* Botão olho customizado - sem efeitos */
+.olho-btn {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #94a3b8;
+    font-size: 15px;
+    padding: 4px;
+    margin: 0;
+    z-index: 5;
+    outline: none;
+}
+.olho-btn:focus,
+.olho-btn:active {
+    outline: none;
+    transform: translateY(-50%) scale(1);
+}
+.olho-btn i {
+    pointer-events: none;
+    transform: none !important;
+    transition: none !important;
+}
+
+/* Checklist e barra de força também precisam esticar na mesma largura */
+.senha-req,
+.forca-wrap,
+.forca-label {
+    align-self: stretch;
+}
+
+/* --- Barra de força da senha --- */
+.forca-wrap {
+    width: 100%;
+    height: 6px;
+    background: #E5E7EB;
+    border-radius: 999px;
+    overflow: hidden;
+    margin: 2px 0 1px;
+}
+.forca-bar {
+    height: 100%;
+    width: 0%;
+    border-radius: 999px;
+    transition: width 0.4s ease, background 0.4s ease;
+}
+.forca-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+    display: block;
+    min-height: 14px;
+    transition: color 0.3s ease;
+}
+
+/* --- Checklist de requisitos de senha --- */
+.senha-req {
+    list-style: none;
+    padding: 0 2px;
+    margin: -6px 0 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    width: 100%;
+    text-align: left;
+}
+.senha-req li {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 0.72rem;
+    color: var(--text-light);
+    max-height: 28px;
+    overflow: hidden;
+    opacity: 1;
+    transition: max-height 0.35s ease, opacity 0.3s ease, margin 0.3s ease;
+}
+.senha-req li i {
+    color: var(--primary-color);
+    font-size: 10px;
+    flex-shrink: 0;
+}
+/* Quando o requisito é cumprido: some suavemente */
+.senha-req li.cumprido {
+    max-height: 0;
+    opacity: 0;
+    margin: 0;
+    pointer-events: none;
+}
+
+/* --- Responsivo --- */
+@media (max-width: 900px) {
+    body {
+        padding: 16px;
+        justify-content: flex-start;
+        padding-top: 80px;
+    }
+
+    .btn-voltar {
+        top: 18px;
+        left: 18px;
+    }
+
+    .container {
+        width: 100%;
+        min-height: 760px;
+    }
+
+    form {
+        padding: 0 28px;
+    }
+
+    .overlay-panel {
+        padding: 0 24px;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        min-height: 840px;
+    }
+
+    .sign-in-container,
+    .sign-up-container,
+    .overlay-container {
+        width: 100%;
+    }
+
+    .overlay-container {
+        display: none;
+    }
+
+    .sign-in-container,
+    .sign-up-container {
+        left: 0;
+        width: 100%;
+    }
+
+    .container.right-panel-active .sign-in-container,
+    .container.right-panel-active .sign-up-container {
+        transform: translateX(0);
+    }
+
+    .sign-in-container {
+        opacity: 1;
+        z-index: 2;
+    }
+
+    .sign-up-container {
+        opacity: 0;
+        z-index: 1;
+        pointer-events: none;
+    }
+
+    .container.right-panel-active .sign-up-container {
+        opacity: 1;
+        z-index: 3;
+        pointer-events: all;
+    }
+
+    .container.right-panel-active .sign-in-container {
+        opacity: 0;
+        pointer-events: none;
+    }
+}
