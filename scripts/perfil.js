@@ -49,8 +49,7 @@ function marcarErro(el) {
 // --- Preencher dados na tela ---
 async function carregarDados() {
     try {
-        let usuario = session.id ? await window.SupabaseService.findUserById(session.id) : null;
-        if (!usuario) usuario = await window.SupabaseService.findUserByEmail(session.email);
+        const usuario = await window.SupabaseService.findUserByEmail(session.email);
         if (!usuario) return;
 
         // Info fixa
@@ -175,9 +174,8 @@ document.getElementById('perfil-form').addEventListener('submit', async (e) => {
     }
 
     try {
-        // Busca usuário atual — prioriza ID da sessão para maior confiabilidade
-        let usuario = session.id ? await window.SupabaseService.findUserById(session.id) : null;
-        if (!usuario) usuario = await window.SupabaseService.findUserByEmail(session.email);
+        // Busca usuário atual pelo email (ID da sessão pode estar desatualizado)
+        const usuario = await window.SupabaseService.findUserByEmail(session.email);
         if (!usuario) {
             mostrarToast('Sessão inválida. Faça login novamente.', 'erro');
             return;
@@ -223,8 +221,7 @@ document.getElementById('perfil-form').addEventListener('submit', async (e) => {
             try {
                 await window.SupabaseService.alterarSenha(usuario.id, senhaAtual, senhaNova);
             } catch (err) {
-                const msg = (err.message || '').toLowerCase();
-                if (msg.includes('nao encontrado') || msg.includes('n\u00e3o encontrado')) {
+                if (err.status === 404) {
                     mostrarToast('Sessão inválida. Faça login novamente.', 'erro');
                 } else {
                     marcarErro(document.getElementById('perfil-senha-atual'));

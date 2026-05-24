@@ -7,6 +7,7 @@ const API_BASE = 'https://ttc-backend-deploy-production.up.railway.app';
 
 async function apiFetch(url, options = {}) {
     const opts = {
+        cache: 'no-store',
         headers: {
             'Content-Type': 'application/json',
             ...(options.headers || {})
@@ -25,7 +26,9 @@ async function apiFetch(url, options = {}) {
         } catch {
             errMsg = await res.text().catch(() => res.statusText) || res.statusText;
         }
-        throw new Error(errMsg);
+        const err = new Error(errMsg || res.statusText);
+        err.status = res.status;
+        throw err;
     }
     if (res.status === 204) return null;
     return res.json();
