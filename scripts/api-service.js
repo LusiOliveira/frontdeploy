@@ -3,7 +3,7 @@
 // Substitui o supabase-service.js mantendo a mesma API (window.SupabaseService)
 // =============================================
 
-const API_BASE = 'http://localhost:8081';
+const API_BASE = 'https://ttc-backend-deploy-production.up.railway.app';
 
 async function apiFetch(url, options = {}) {
     const opts = {
