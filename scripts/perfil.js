@@ -221,8 +221,8 @@ document.getElementById('perfil-form').addEventListener('submit', async (e) => {
                 return;
             }
             try {
-                console.log('DEBUG alterarSenha ID:', usuario.id, 'tipo:', typeof usuario.id);
-                await window.SupabaseService.alterarSenha(usuario.id, senhaAtual, senhaNova);
+                console.log('DEBUG alterarSenha email:', session.email);
+                await window.SupabaseService.alterarSenha(session.email, senhaAtual, senhaNova);
             } catch (err) {
                 if (err.status === 404) {
                     mostrarToast('Sessão inválida. Faça login novamente.', 'erro');

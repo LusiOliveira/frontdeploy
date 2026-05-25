@@ -330,10 +330,10 @@ async function excluirConta(email) {
     return apiFetch('/usuarios/' + user.id + '/conta', { method: 'DELETE' });
 }
 
-async function alterarSenha(id, senhaAtual, senhaNova) {
-    return apiFetch('/usuarios/' + id + '/senha', {
+async function alterarSenha(email, senhaAtual, senhaNova) {
+    return apiFetch('/usuarios/senha', {
         method: 'PATCH',
-        body: { senhaAtual, senhaNova }
+        body: { email, senhaAtual, senhaNova }
     });
 }
 
