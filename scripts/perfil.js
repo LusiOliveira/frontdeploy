@@ -49,7 +49,9 @@ function marcarErro(el) {
 // --- Preencher dados na tela ---
 async function carregarDados() {
     try {
+        console.log('DEBUG session:', session);
         const usuario = await window.SupabaseService.findUserByEmail(session.email);
+        console.log('DEBUG usuario por email:', usuario);
         if (!usuario) return;
 
         // Info fixa
@@ -219,6 +221,7 @@ document.getElementById('perfil-form').addEventListener('submit', async (e) => {
                 return;
             }
             try {
+                console.log('DEBUG alterarSenha ID:', usuario.id, 'tipo:', typeof usuario.id);
                 await window.SupabaseService.alterarSenha(usuario.id, senhaAtual, senhaNova);
             } catch (err) {
                 if (err.status === 404) {

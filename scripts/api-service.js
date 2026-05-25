@@ -55,9 +55,13 @@ async function getUsers() {
 
 async function findUserByEmail(email) {
     try {
-        const u = await apiFetch('/usuarios/email/' + encodeURIComponent(email.toLowerCase()));
+        const url = '/usuarios/email/' + encodeURIComponent(email.toLowerCase());
+        console.log('DEBUG apiFetch GET', url);
+        const u = await apiFetch(url);
+        console.log('DEBUG apiFetch response', u);
         return normalizeUser(u);
     } catch (e) {
+        console.error('DEBUG apiFetch error', e);
         return null;
     }
 }
