@@ -11,7 +11,12 @@
         /* ─────────────────────────────────────
            PAGE BASE
         ───────────────────────────────────── */
-        body { background: #F1F5F9; }
+        body {
+            background:
+                radial-gradient(circle at 10% 20%, rgba(5,150,105,0.05), transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(16,185,129,0.03), transparent 40%),
+                linear-gradient(180deg, #F8FAF9 0%, #F1F5F9 50%, #F8FAFC 100%) !important;
+        }
         .cont-main { padding-top: 80px; min-height: 100vh; }
 
         /* ─────────────────────────────────────
@@ -499,6 +504,120 @@
         .cv-card-h.tbg-legislacao .cv-play-sm { color: #1D4ED8; }
 
         /* ─────────────────────────────────────
+           MODAL DE ARTIGO
+        ───────────────────────────────────── */
+        .art-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.55);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+        }
+        .art-modal-overlay.ativo {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .art-modal {
+            background: #fff;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 720px;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.18);
+            transform: translateY(12px);
+            transition: transform 0.25s ease;
+        }
+        .art-modal-overlay.ativo .art-modal {
+            transform: translateY(0);
+        }
+        .art-modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.1rem 1.4rem;
+            border-bottom: 1px solid #E5E7EB;
+        }
+        .art-modal-titulo {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #111827;
+            line-height: 1.3;
+            padding-right: 1rem;
+        }
+        .art-modal-fechar {
+            background: #F3F4F6;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6B7280;
+            transition: background 0.15s, color 0.15s;
+            flex-shrink: 0;
+        }
+        .art-modal-fechar:hover {
+            background: #E5E7EB;
+            color: #111827;
+        }
+        .art-modal-body {
+            padding: 1.4rem;
+            overflow-y: auto;
+            font-size: 0.97rem;
+            line-height: 1.7;
+            color: #374151;
+        }
+        .art-modal-body p {
+            margin-bottom: 0.9rem;
+        }
+        .art-modal-footer {
+            display: flex;
+            gap: 0.6rem;
+            padding: 0.9rem 1.4rem 1.1rem;
+            border-top: 1px solid #E5E7EB;
+            justify-content: flex-end;
+        }
+        .art-modal-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0.55rem 1rem;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s, transform 0.1s;
+            border: none;
+        }
+        .art-modal-btn:hover { transform: translateY(-1px); }
+        .art-modal-btn.secundario {
+            background: #F3F4F6;
+            color: #374151;
+        }
+        .art-modal-btn.secundario:hover { background: #E5E7EB; }
+        .art-modal-btn.primario {
+            background: #059669;
+            color: #fff;
+        }
+        .art-modal-btn.primario:hover { background: #047857; }
+        .art-modal-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ─────────────────────────────────────
            RESPONSIVO
         ───────────────────────────────────── */
         @media (max-width: 860px) {
@@ -597,6 +716,25 @@
         </div>
     </main>
 
+    <!-- Modal de Artigo -->
+    <div class="art-modal-overlay" id="art-modal-overlay" aria-hidden="true">
+        <div class="art-modal" role="dialog" aria-modal="true" aria-labelledby="art-modal-titulo">
+            <div class="art-modal-header">
+                <div class="art-modal-titulo" id="art-modal-titulo"></div>
+                <button class="art-modal-fechar" id="art-modal-fechar" aria-label="Fechar">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="art-modal-body" id="art-modal-body"></div>
+            <div class="art-modal-footer" id="art-modal-footer">
+                <button class="art-modal-btn secundario" id="art-modal-fechar-btn">Fechar</button>
+                <a class="art-modal-btn primario" id="art-modal-link" href="#" target="_blank" rel="noopener" style="display:none;">
+                    <i class="fa-solid fa-external-link-alt"></i> Ver no site original
+                </a>
+            </div>
+        </div>
+    </div>
+
     <footer>
         <p><i class="fa-solid fa-bolt"></i> Projeto EletroLight &copy; 2026</p>
         <p style="font-size: 0.9rem; opacity: 0.7; margin-top: 5px;">Solução Digital para Consumo Consciente e Mitigação de E-Lixo.</p>
@@ -662,9 +800,10 @@
             return null;
         }
 
-        function thumbStyle(link_video, cat) {
+        function thumbStyle(link_video, cat, imagem) {
             const id = getVideoId(link_video);
             if (id) return { cls: 'is-video', style: `background-image:url('https://img.youtube.com/vi/${id}/mqdefault.jpg');` };
+            if (imagem) return { cls: 'is-video', style: `background-image:url('${imagem}');` };
             return { cls: cat.tbg, style: '' };
         }
 
@@ -673,21 +812,51 @@
             return Math.max(1, Math.round(words / 200));
         }
 
+        /* ─── Modal de Artigo ─── */
+        function abrirModalArtigo(c) {
+            document.getElementById('art-modal-titulo').textContent = c.titulo;
+            document.getElementById('art-modal-body').innerHTML = `<p>${(c.texto || '').replace(/\n/g, '</p><p>')}</p>`;
+            const linkEl = document.getElementById('art-modal-link');
+            if (c.link_original) {
+                linkEl.href = c.link_original;
+                linkEl.style.display = 'inline-flex';
+            } else {
+                linkEl.style.display = 'none';
+            }
+            document.getElementById('art-modal-overlay').classList.add('ativo');
+            document.getElementById('art-modal-overlay').setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+        }
+        function fecharModalArtigo() {
+            document.getElementById('art-modal-overlay').classList.remove('ativo');
+            document.getElementById('art-modal-overlay').setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+        }
+        document.getElementById('art-modal-fechar').addEventListener('click', fecharModalArtigo);
+        document.getElementById('art-modal-fechar-btn').addEventListener('click', fecharModalArtigo);
+        document.getElementById('art-modal-overlay').addEventListener('click', e => {
+            if (e.target === document.getElementById('art-modal-overlay')) fecharModalArtigo();
+        });
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') fecharModalArtigo();
+        });
+
         /* ─── Render Destaque ─── */
         function renderDestaque(c) {
             const cat = getCat(c.categoria);
             const temVideo = !!c.link_video;
             const rt = readTime(c.texto);
-            const th = thumbStyle(c.link_video, cat);
+            const th = thumbStyle(c.link_video, cat, c.imagem);
 
+            const clickArtigo = !temVideo ? `onclick="abrirModalArtigo(${JSON.stringify(c).replace(/"/g, '&quot;')})" style="cursor:pointer;"` : '';
             document.getElementById('secao-destaque').style.display = '';
             document.getElementById('destaque-card').innerHTML = `
                 <div class="cv-dest-thumb ${th.cls}" style="${th.style}${temVideo ? 'cursor:pointer;' : ''}" ${temVideo ? `onclick="window.open('${c.link_video}','_blank')"` : ''}>
                     ${temVideo
                         ? `<div class="cv-play-lg"><i class="fa-solid fa-play"></i></div>`
-                        : `<div class="cv-icon-lg"><i class="fa-solid ${cat.icon}"></i></div>`}
+                        : c.imagem ? '' : `<div class="cv-icon-lg"><i class="fa-solid ${cat.icon}"></i></div>`}
                 </div>
-                <div class="cv-dest-info">
+                <div class="cv-dest-info" ${clickArtigo}>
                     <div class="cv-dest-badges">
                         <span class="cv-badge-assistido"><i class="fa-solid fa-star"></i> MAIS ACESSADO</span>
                         <span class="cv-badge-cat ${cat.bg}">${cat.label}</span>
@@ -703,7 +872,7 @@
                             ? `<a href="${c.link_video}" target="_blank" rel="noopener" class="cv-btn-assistir">
                                 <i class="fa-solid fa-play"></i> Assistir
                                </a>`
-                            : ''}
+                            : `<span class="cv-btn-assistir" style="background:#1D4ED8;"><i class="fa-solid fa-file-lines"></i> Ler artigo</span>`}
                     </div>
                 </div>`;
         }
@@ -713,11 +882,12 @@
             const cat = getCat(c.categoria);
             const temVideo = !!c.link_video;
             const rt = readTime(c.texto);
-            const th = thumbStyle(c.link_video, cat);
+            const th = thumbStyle(c.link_video, cat, c.imagem);
             const thumbContent = temVideo
                 ? `<a href="${c.link_video}" target="_blank" rel="noopener" class="cv-play-sm" title="Assistir"><i class="fa-solid fa-play"></i></a>`
-                : `<div class="cv-icon-sm ${cat.tc}"><i class="fa-solid ${cat.icon}"></i></div>`;
-            return `<div class="cv-card ${th.cls}">
+                : c.imagem ? '' : `<div class="cv-icon-sm ${cat.tc}"><i class="fa-solid ${cat.icon}"></i></div>`;
+            const clickHandler = !temVideo ? `onclick="abrirModalArtigo(${JSON.stringify(c).replace(/"/g, '&quot;')})" style="cursor:pointer;"` : '';
+            return `<div class="cv-card ${th.cls}" ${clickHandler}>
                 <div class="cv-card-thumb ${th.cls}" style="${th.style}">${thumbContent}</div>
                 <div class="cv-card-body">
                     <div class="cv-card-cat ${cat.tc}"><i class="fa-solid ${cat.icon}"></i> ${cat.label}</div>
@@ -732,11 +902,12 @@
             const cat = getCat(c.categoria);
             const temVideo = !!c.link_video;
             const rt = readTime(c.texto);
-            const th = thumbStyle(c.link_video, cat);
+            const th = thumbStyle(c.link_video, cat, c.imagem);
             const thumbContent = temVideo
                 ? `<a href="${c.link_video}" target="_blank" rel="noopener" class="cv-play-sm" title="Assistir"><i class="fa-solid fa-play"></i></a>`
-                : `<div class="cv-icon-sm ${cat.tc}"><i class="fa-solid ${cat.icon}"></i></div>`;
-            return `<div class="cv-card-h ${th.cls}">
+                : c.imagem ? '' : `<div class="cv-icon-sm ${cat.tc}"><i class="fa-solid ${cat.icon}"></i></div>`;
+            const clickHandlerH = !temVideo ? `onclick="abrirModalArtigo(${JSON.stringify(c).replace(/"/g, '&quot;')})" style="cursor:pointer;"` : '';
+            return `<div class="cv-card-h ${th.cls}" ${clickHandlerH}>
                 <div class="cv-card-h-thumb ${th.cls}" style="${th.style}">${thumbContent}</div>
                 <div class="cv-card-h-body">
                     <div class="cv-card-h-cat ${cat.tc}"><i class="fa-solid ${cat.icon}"></i> ${cat.label}</div>

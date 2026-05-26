@@ -357,6 +357,38 @@ async function getUsuariosBloqueados() {
 }
 
 // ============================================
+// UPLOAD DE IMAGEM (Supabase Storage via REST)
+// ============================================
+
+const SUPABASE_URL = 'https://nkddathnxrdazohoxfpi.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5rZGRhdGhueHJkYXpvaG94ZnBpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1MzA2ODUsImV4cCI6MjA5MTEwNjY4NX0.RyMChIPE4YHVeErYOLYtL25xkj--ek_jmJQWqrpPFwY';
+
+async function uploadImagem(file, path = '') {
+    const bucket = 'imagens';
+    const ext = file.name.split('.').pop();
+    const fileName = `${Date.now()}.${ext}`;
+    const fullPath = path ? `${path}${fileName}` : fileName;
+    const url = `${SUPABASE_URL}/storage/v1/object/${bucket}/${fullPath}`;
+
+    const res = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+            'Content-Type': file.type || 'application/octet-stream',
+            'x-upsert': 'true'
+        },
+        body: file
+    });
+
+    if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || `Upload falou: ${res.status}`);
+    }
+
+    return `${SUPABASE_URL}/storage/v1/object/public/${bucket}/${fullPath}`;
+}
+
+// ============================================
 // EXPORTS (mantém compatibilidade com window.SupabaseService)
 // ============================================
 
@@ -391,6 +423,7 @@ window.SupabaseService = {
     adicionarConteudo,
     atualizarConteudo,
     deletarConteudo,
+    uploadImagem,
     aplicarPunicao,
     removerPunicao,
     excluirConta,

@@ -325,6 +325,15 @@
                     <input type="url" id="cont-video" placeholder="https://youtube.com/…">
                 </div>
                 <div class="form-group">
+                    <label>Link Original (opcional)</label>
+                    <input type="url" id="cont-link-original" placeholder="https://site-externo.com/…">
+                </div>
+                <div class="form-group">
+                    <label>Imagem — Thumbnail (opcional)</label>
+                    <input type="file" id="cont-imagem" accept="image/*" onchange="previewImagemFile(this)">
+                    <img id="preview-imagem" src="" alt="" style="display:none;margin-top:8px;width:100%;height:100px;object-fit:cover;border-radius:8px;border:1px solid #E5E7EB;">
+                </div>
+                <div class="form-group">
                     <label>Status de publicação</label>
                     <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.88rem;font-weight:500;margin-top:4px;">
                         <input type="checkbox" id="cont-ativo" style="width:16px;height:16px;accent-color:#059669;">
@@ -602,6 +611,7 @@
     // ─────────────────────────────────────────────
     let editandoId = null;
     let contMap = {};
+    let arquivoImagem = null; // arquivo selecionado para upload
 
     async function carregarConteudo() {
         const el = document.getElementById('lista-conteudo');
@@ -652,6 +662,10 @@
                     document.getElementById('cont-categoria').value = item.categoria;
                     document.getElementById('cont-texto').value = item.texto;
                     document.getElementById('cont-video').value = item.link_video || '';
+                    document.getElementById('cont-link-original').value = item.link_original || '';
+                    document.getElementById('cont-imagem').value = '';
+                    arquivoImagem = null;
+                    previewImagemUrl(item.imagem || '');
                     document.getElementById('cont-ativo').checked = !!item.ativo;
                     document.getElementById('edit-data-criacao').value = item.dataCriacao || '';
                     document.getElementById('form-title').textContent = 'Editar Conteúdo';
@@ -693,6 +707,8 @@
                             categoria: item.categoria,
                             texto: item.texto,
                             link_video: item.link_video,
+                            link_original: item.link_original,
+                            imagem: item.imagem,
                             ativo: novoAtivo,
                             dataCriacao: item.dataCriacao
                         });
@@ -723,16 +739,30 @@
         const categoria = document.getElementById('cont-categoria').value;
         const texto     = document.getElementById('cont-texto').value.trim();
         const link_video = document.getElementById('cont-video').value.trim() || null;
+        const link_original = document.getElementById('cont-link-original').value.trim() || null;
         const ativo     = document.getElementById('cont-ativo').checked;
         const dataCriacao = document.getElementById('edit-data-criacao').value || null;
 
         if (!titulo || !texto) { toast('Preencha título e texto.', 'erro'); return; }
 
+        let imagem = null;
+        try {
+            if (arquivoImagem) {
+                imagem = await window.SupabaseService.uploadImagem(arquivoImagem, 'conteudo/');
+            } else if (editandoId) {
+                const item = contMap[String(editandoId)];
+                if (item && item.imagem) imagem = item.imagem;
+            }
+        } catch (e) {
+            toast('Erro ao fazer upload da imagem: ' + e.message, 'erro');
+            return;
+        }
+
         if (editandoId) {
-            await window.SupabaseService.atualizarConteudo(editandoId, { titulo, categoria, texto, link_video, ativo, dataCriacao });
+            await window.SupabaseService.atualizarConteudo(editandoId, { titulo, categoria, texto, link_video, link_original, imagem, ativo, dataCriacao });
             toast('Conteúdo atualizado!');
         } else {
-            await window.SupabaseService.adicionarConteudo({ titulo, categoria, texto, link_video, ativo });
+            await window.SupabaseService.adicionarConteudo({ titulo, categoria, texto, link_video, link_original, imagem, ativo });
             toast('Conteúdo adicionado!');
         }
         limparForm();
@@ -741,9 +771,30 @@
 
     document.getElementById('btn-cancelar-cont').addEventListener('click', limparForm);
 
+    function previewImagemUrl(url) {
+        const img = document.getElementById('preview-imagem');
+        if (url) { img.src = url; img.style.display = 'block'; }
+        else { img.src = ''; img.style.display = 'none'; }
+    }
+
+    function previewImagemFile(input) {
+        const img = document.getElementById('preview-imagem');
+        if (input.files && input.files[0]) {
+            arquivoImagem = input.files[0];
+            const reader = new FileReader();
+            reader.onload = e => { img.src = e.target.result; img.style.display = 'block'; };
+            reader.readAsDataURL(arquivoImagem);
+        } else {
+            arquivoImagem = null;
+            img.src = ''; img.style.display = 'none';
+        }
+    }
+
     function limparForm() {
         editandoId = null;
-        ['cont-titulo', 'cont-texto', 'cont-video'].forEach(id => document.getElementById(id).value = '');
+        arquivoImagem = null;
+        ['cont-titulo', 'cont-texto', 'cont-video', 'cont-link-original', 'cont-imagem'].forEach(id => document.getElementById(id).value = '');
+        previewImagemUrl('');
         document.getElementById('cont-categoria').value = 'video';
         document.getElementById('cont-ativo').checked = false;
         document.getElementById('edit-data-criacao').value = '';
