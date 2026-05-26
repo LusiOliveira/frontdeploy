@@ -289,6 +289,14 @@ async function getConteudoEducativo() {
     }));
 }
 
+async function getTodosConteudos() {
+    const lista = await apiFetch('/ConteudosEducativos');
+    return (lista || []).map(c => ({
+        ...c,
+        link_video: c.linkVideo || null
+    }));
+}
+
 async function adicionarConteudo(conteudo) {
     const payload = { ...conteudo };
     if (payload.link_video !== undefined) {
@@ -299,7 +307,12 @@ async function adicionarConteudo(conteudo) {
 }
 
 async function atualizarConteudo(id, updates) {
-    return apiFetch('/ConteudosEducativos/' + id, { method: 'PUT', body: updates });
+    const payload = { ...updates };
+    if (payload.link_video !== undefined) {
+        payload.linkVideo = payload.link_video;
+        delete payload.link_video;
+    }
+    return apiFetch('/ConteudosEducativos/' + id, { method: 'PUT', body: payload });
 }
 
 async function deletarConteudo(id) {
@@ -374,6 +387,7 @@ window.SupabaseService = {
     enviarDenuncia,
     resolverDenuncia,
     getConteudoEducativo,
+    getTodosConteudos,
     adicionarConteudo,
     atualizarConteudo,
     deletarConteudo,

@@ -324,6 +324,14 @@
                     <label>Link de Vídeo (opcional)</label>
                     <input type="url" id="cont-video" placeholder="https://youtube.com/…">
                 </div>
+                <div class="form-group">
+                    <label>Status de publicação</label>
+                    <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.88rem;font-weight:500;margin-top:4px;">
+                        <input type="checkbox" id="cont-ativo" style="width:16px;height:16px;accent-color:#059669;">
+                        Publicar imediatamente
+                    </label>
+                </div>
+                <input type="hidden" id="edit-data-criacao">
                 <button class="btn-salvar" id="btn-salvar-cont">
                     <i class="fa-solid fa-floppy-disk"></i> Salvar Conteúdo
                 </button>
@@ -593,12 +601,15 @@
     // TAB 3 — CONTEÚDO EDUCATIVO
     // ─────────────────────────────────────────────
     let editandoId = null;
+    let contMap = {};
 
     async function carregarConteudo() {
         const el = document.getElementById('lista-conteudo');
         try {
-            const lista = await window.SupabaseService.getConteudoEducativo();
-            document.getElementById('stat-conteudo').textContent = lista.length;
+            const lista = await window.SupabaseService.getTodosConteudos();
+            contMap = {};
+            lista.forEach(c => { contMap[String(c.id)] = c; });
+            document.getElementById('stat-conteudo').textContent = lista.filter(c => c.ativo).length;
 
             if (!lista.length) {
                 el.innerHTML = `<div class="empty-state">
@@ -616,8 +627,11 @@
                             <span class="cont-cat">${c.categoria}</span>
                             <div class="cont-titulo">${c.titulo}</div>
                         </div>
-                        <button class="toggle-btn ${c.ativo ? 'on' : 'off'}" data-id="${c.id}"
-                            title="${c.ativo ? 'Desativar' : 'Ativar'}"></button>
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <span class="d-status ${c.ativo ? 'resolvida' : 'pendente'}">${c.ativo ? 'Publicado' : 'Rascunho'}</span>
+                            <button class="toggle-btn ${c.ativo ? 'on' : 'off'}" data-id="${c.id}"
+                                title="${c.ativo ? 'Despublicar' : 'Publicar'}"></button>
+                        </div>
                     </div>
                     <div class="cont-texto">${c.texto}</div>
                     ${c.link_video ? `<div class="cont-video"><i class="fa-brands fa-youtube"></i>
@@ -631,13 +645,15 @@
 
             el.querySelectorAll('.btn-ed').forEach(btn => {
                 btn.addEventListener('click', () => {
-                    const item = lista.find(c => String(c.id) === btn.dataset.id);
+                    const item = contMap[btn.dataset.id];
                     if (!item) return;
                     editandoId = item.id;
                     document.getElementById('cont-titulo').value = item.titulo;
                     document.getElementById('cont-categoria').value = item.categoria;
                     document.getElementById('cont-texto').value = item.texto;
                     document.getElementById('cont-video').value = item.link_video || '';
+                    document.getElementById('cont-ativo').checked = !!item.ativo;
+                    document.getElementById('edit-data-criacao').value = item.dataCriacao || '';
                     document.getElementById('form-title').textContent = 'Editar Conteúdo';
                     document.getElementById('btn-cancelar-cont').style.display = 'block';
                     document.querySelector('.form-card').scrollIntoView({ behavior: 'smooth' });
@@ -655,9 +671,18 @@
 
             el.querySelectorAll('.toggle-btn').forEach(btn => {
                 btn.addEventListener('click', async () => {
-                    const isOn = btn.classList.contains('on');
-                    await window.SupabaseService.atualizarConteudo(btn.dataset.id, { ativo: !isOn });
-                    toast(isOn ? 'Conteúdo desativado.' : 'Conteúdo ativado!');
+                    const item = contMap[btn.dataset.id];
+                    if (!item) return;
+                    const novoAtivo = !item.ativo;
+                    await window.SupabaseService.atualizarConteudo(btn.dataset.id, {
+                        titulo: item.titulo,
+                        categoria: item.categoria,
+                        texto: item.texto,
+                        link_video: item.link_video,
+                        ativo: novoAtivo,
+                        dataCriacao: item.dataCriacao
+                    });
+                    toast(novoAtivo ? 'Conteúdo publicado!' : 'Conteúdo despublicado.');
                     carregarConteudo();
                 });
             });
@@ -670,14 +695,16 @@
         const categoria = document.getElementById('cont-categoria').value;
         const texto     = document.getElementById('cont-texto').value.trim();
         const link_video = document.getElementById('cont-video').value.trim() || null;
+        const ativo     = document.getElementById('cont-ativo').checked;
+        const dataCriacao = document.getElementById('edit-data-criacao').value || null;
 
         if (!titulo || !texto) { toast('Preencha título e texto.', 'erro'); return; }
 
         if (editandoId) {
-            await window.SupabaseService.atualizarConteudo(editandoId, { titulo, categoria, texto, link_video });
+            await window.SupabaseService.atualizarConteudo(editandoId, { titulo, categoria, texto, link_video, ativo, dataCriacao });
             toast('Conteúdo atualizado!');
         } else {
-            await window.SupabaseService.adicionarConteudo({ titulo, categoria, texto, link_video });
+            await window.SupabaseService.adicionarConteudo({ titulo, categoria, texto, link_video, ativo });
             toast('Conteúdo adicionado!');
         }
         limparForm();
@@ -690,6 +717,8 @@
         editandoId = null;
         ['cont-titulo', 'cont-texto', 'cont-video'].forEach(id => document.getElementById(id).value = '');
         document.getElementById('cont-categoria').value = 'reciclagem';
+        document.getElementById('cont-ativo').checked = false;
+        document.getElementById('edit-data-criacao').value = '';
         document.getElementById('form-title').textContent = 'Novo Conteúdo';
         document.getElementById('btn-cancelar-cont').style.display = 'none';
     }
