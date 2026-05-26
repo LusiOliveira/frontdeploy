@@ -52,6 +52,35 @@ header {
     gap: 1rem;
 }
 
+/* Menu hamburger */
+.nav-hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 40px;
+    height: 40px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 8px;
+    transition: background 0.2s;
+    z-index: 1001;
+}
+.nav-hamburger:hover { background: #f1f5f9; }
+.nav-hamburger span {
+    display: block;
+    width: 100%;
+    height: 3px;
+    background: #334155;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+}
+.nav-hamburger.is-active span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+.nav-hamburger.is-active span:nth-child(2) { opacity: 0; }
+.nav-hamburger.is-active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
 .logo {
     font-size: 1.8rem;
     font-weight: 700;
@@ -548,6 +577,47 @@ main {
     .map-layout { flex-direction: column; height: auto; }
     .map-view { height: 400px; }
     .map-sidebar { max-height: 400px; }
+
+    /* Menu mobile */
+    header {
+        grid-template-columns: 1fr auto auto;
+        padding: 0.75rem 4%;
+    }
+    .nav-hamburger { display: flex; }
+    .nav-links {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: var(--white);
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+        padding: 0.5rem 0;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        border-radius: 0 0 16px 16px;
+        transform: translateY(-10px);
+        opacity: 0;
+        pointer-events: none;
+        transition: all 0.3s ease;
+        max-height: 0;
+        overflow: hidden;
+    }
+    .nav-links.is-open {
+        transform: translateY(0);
+        opacity: 1;
+        pointer-events: auto;
+        max-height: 500px;
+    }
+    .nav-links a {
+        width: 90%;
+        text-align: center;
+        padding: 12px 16px;
+        border-bottom: 1px solid #f1f5f9;
+    }
+    .nav-links a:last-child { border-bottom: none; }
+    .btn-nav-wrap { justify-self: end; }
+    .btn-nav { padding: 8px 16px; font-size: 0.85rem; }
 }
 
 /* Seção Economia Circular (Cards) */
@@ -949,6 +1019,14 @@ footer { background-color: var(--text-dark); color: var(--white); text-align: ce
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+/* Chatbot mobile */
+@media (max-width: 768px) {
+    .chatbot-wrapper { bottom: 12px; right: 12px; }
+    .chatbot-toggle { width: 48px; height: 48px; font-size: 1.2rem; }
+    .chatbot-window { width: calc(100vw - 24px); right: 0; bottom: 68px; }
+    .chatbot-messages { height: 220px; }
 }
 
 /* --- SEÇÃO CANAL DE APRENDIZADO --- */

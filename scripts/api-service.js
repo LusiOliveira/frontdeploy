@@ -452,3 +452,23 @@ window.SupabaseService = {
     excluirConta,
     getUsuariosBloqueados
 };
+
+// Menu hamburger (mobile)
+document.addEventListener('DOMContentLoaded', () => {
+    const hamburger = document.getElementById('nav-hamburger');
+    const navLinks = document.getElementById('nav-links');
+    if (hamburger && navLinks) {
+        hamburger.addEventListener('click', () => {
+            const isOpen = navLinks.classList.toggle('is-open');
+            hamburger.classList.toggle('is-active', isOpen);
+            hamburger.setAttribute('aria-expanded', isOpen);
+        });
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('is-open');
+                hamburger.classList.remove('is-active');
+                hamburger.setAttribute('aria-expanded', 'false');
+            });
+        });
+    }
+});
