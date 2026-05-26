@@ -285,7 +285,9 @@ async function getConteudoEducativo() {
     const lista = await apiFetch('/ConteudosEducativos/ativos');
     return (lista || []).map(c => ({
         ...c,
-        link_video: c.linkVideo || null
+        link_video: c.linkVideo || null,
+        link_original: c.linkOriginal || null,
+        imagem: c.imagem || null
     }));
 }
 
@@ -293,25 +295,34 @@ async function getTodosConteudos() {
     const lista = await apiFetch('/ConteudosEducativos');
     return (lista || []).map(c => ({
         ...c,
-        link_video: c.linkVideo || null
+        link_video: c.linkVideo || null,
+        link_original: c.linkOriginal || null,
+        imagem: c.imagem || null
     }));
 }
 
-async function adicionarConteudo(conteudo) {
-    const payload = { ...conteudo };
-    if (payload.link_video !== undefined) {
-        payload.linkVideo = payload.link_video;
-        delete payload.link_video;
+function snakeToCamel(payload) {
+    const out = { ...payload };
+    const map = {
+        link_video: 'linkVideo',
+        link_original: 'linkOriginal'
+    };
+    for (const [snake, camel] of Object.entries(map)) {
+        if (out[snake] !== undefined) {
+            out[camel] = out[snake];
+            delete out[snake];
+        }
     }
+    return out;
+}
+
+async function adicionarConteudo(conteudo) {
+    const payload = snakeToCamel(conteudo);
     return apiFetch('/ConteudosEducativos', { method: 'POST', body: payload });
 }
 
 async function atualizarConteudo(id, updates) {
-    const payload = { ...updates };
-    if (payload.link_video !== undefined) {
-        payload.linkVideo = payload.link_video;
-        delete payload.link_video;
-    }
+    const payload = snakeToCamel(updates);
     return apiFetch('/ConteudosEducativos/' + id, { method: 'PUT', body: payload });
 }
 

@@ -747,23 +747,30 @@
 
         if (!titulo || !texto) { toast('Preencha título e texto.', 'erro'); return; }
 
+        console.log('SALVANDO - editandoId:', editandoId, 'contMap keys:', Object.keys(contMap));
+
         let imagem = null;
         try {
             if (arquivoImagem) {
                 imagem = await window.SupabaseService.uploadImagem(arquivoImagem, 'conteudo/');
+                console.log('Upload imagem OK:', imagem);
             } else if (editandoId) {
                 const item = contMap[String(editandoId)];
+                console.log('Item existente para preservar imagem:', item);
                 if (item && item.imagem) imagem = item.imagem;
             }
         } catch (e) {
+            console.error('Erro upload:', e);
             toast('Erro ao fazer upload da imagem: ' + e.message, 'erro');
             return;
         }
 
         if (editandoId) {
+            console.log('MODO EDICAO - PUT id:', editandoId);
             await window.SupabaseService.atualizarConteudo(editandoId, { titulo, categoria, texto, link_video, link_original, imagem, ativo, dataCriacao });
             toast('Conteúdo atualizado!');
         } else {
+            console.log('MODO NOVO - POST');
             await window.SupabaseService.adicionarConteudo({ titulo, categoria, texto, link_video, link_original, imagem, ativo });
             toast('Conteúdo adicionado!');
         }
