@@ -78,30 +78,6 @@
             font-weight: 500;
         }
 
-        /* ─────────────────────────────────────
-           PILLS DE FILTRO
-        ───────────────────────────────────── */
-        .cv-pills {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-            margin-bottom: 2rem;
-        }
-        .cv-pill {
-            padding: 5px 16px;
-            border-radius: 999px;
-            border: 1.5px solid #D1D5DB;
-            background: #fff;
-            font-size: 0.82rem;
-            font-weight: 500;
-            color: #374151;
-            cursor: pointer;
-            transition: all 0.18s;
-            white-space: nowrap;
-        }
-        .cv-pill:hover { border-color: #059669; color: #059669; }
-        .cv-pill.ativo { background: #059669; border-color: #059669; color: #fff; font-weight: 600; }
-
         /* ── Abas de tipo (Todos / Vídeos / Artigos) ── */
         .cv-type-tabs {
             display: flex;
@@ -589,16 +565,6 @@
                 <button class="cv-type-tab artigo" data-tipo="artigo"><i class="fa-solid fa-file-lines"></i> Artigos</button>
             </div>
 
-            <!-- Pills de filtro -->
-            <div class="cv-pills">
-                <button class="cv-pill ativo" data-cat="todos">Todos</button>
-                <button class="cv-pill" data-cat="reciclagem">Reciclagem</button>
-                <button class="cv-pill" data-cat="curiosidades">Curiosidades</button>
-                <button class="cv-pill" data-cat="dicas">Dicas</button>
-                <button class="cv-pill" data-cat="impacto">Impacto ambiental</button>
-                <button class="cv-pill" data-cat="legislacao">Legislação</button>
-            </div>
-
             <!-- Destaque -->
             <div id="secao-destaque" style="display:none;">
                 <p class="cv-secao">Destaque</p>
@@ -785,19 +751,12 @@
         let todosConteudos = [];
         let paginaAtual = 0;
         let listaFiltrada = [];
-        let catAtiva  = 'todos';
         let tipoAtivo = 'todos';
 
-        function filtrar(cat, tipo) {
+        function filtrar(tipo) {
             let lista = todosConteudos;
             if (tipo === 'video')  lista = lista.filter(c =>  !!c.link_video);
             if (tipo === 'artigo') lista = lista.filter(c => !c.link_video);
-            if (cat !== 'todos') {
-                lista = lista.filter(c => {
-                    const key = (c.categoria || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
-                    return key === cat;
-                });
-            }
             return lista;
         }
 
@@ -809,7 +768,7 @@
             document.getElementById('cv-loading').style.display = 'none';
 
             /* Destaque: apenas na pág 0 sem filtros activos */
-            const showDestaque = pag === 0 && catAtiva === 'todos' && tipoAtivo === 'todos';
+            const showDestaque = pag === 0 && tipoAtivo === 'todos';
             let items = fatia;
             if (showDestaque && lista.length > 0) {
                 renderDestaque(lista[0]);
@@ -863,7 +822,7 @@
         }
 
         function aplicarFiltro() {
-            listaFiltrada = filtrar(catAtiva, tipoAtivo);
+            listaFiltrada = filtrar(tipoAtivo);
             paginaAtual = 0;
             if (!listaFiltrada.length) {
                 document.getElementById('secao-destaque').style.display = 'none';
@@ -880,16 +839,6 @@
             document.getElementById('cv-loading').style.display = 'none';
             renderPagina(listaFiltrada, 0);
         }
-
-        /* Pills de categoria */
-        document.querySelectorAll('.cv-pill').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.cv-pill').forEach(b => b.classList.remove('ativo'));
-                btn.classList.add('ativo');
-                catAtiva = btn.dataset.cat;
-                aplicarFiltro();
-            });
-        });
 
         /* Abas de tipo */
         document.querySelectorAll('.cv-type-tab').forEach(btn => {

@@ -307,13 +307,10 @@
                     <input type="text" id="cont-titulo" placeholder="Ex: Como reciclar pilhas">
                 </div>
                 <div class="form-group">
-                    <label>Categoria</label>
+                    <label>Tipo de conteúdo</label>
                     <select id="cont-categoria">
-                        <option value="reciclagem">Reciclagem</option>
-                        <option value="curiosidades">Curiosidades</option>
-                        <option value="dicas">Dicas Práticas</option>
-                        <option value="impacto">Impacto Ambiental</option>
-                        <option value="legislacao">Legislação</option>
+                        <option value="video">Vídeo</option>
+                        <option value="artigo">Artigo</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -716,7 +713,7 @@
     function limparForm() {
         editandoId = null;
         ['cont-titulo', 'cont-texto', 'cont-video'].forEach(id => document.getElementById(id).value = '');
-        document.getElementById('cont-categoria').value = 'reciclagem';
+        document.getElementById('cont-categoria').value = 'video';
         document.getElementById('cont-ativo').checked = false;
         document.getElementById('edit-data-criacao').value = '';
         document.getElementById('form-title').textContent = 'Novo Conteúdo';
