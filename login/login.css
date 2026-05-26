@@ -591,6 +591,20 @@ input[type="password"]::-webkit-credentials-auto-fill-button {
     pointer-events: none;
 }
 
+.toggle-mobile {
+    display: none;
+    margin-top: 18px;
+    font-size: 0.88rem;
+    color: var(--text-light);
+}
+
+.toggle-mobile a {
+    color: var(--primary-color);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
 /* --- Responsivo --- */
 @media (max-width: 900px) {
     body {
@@ -619,50 +633,60 @@ input[type="password"]::-webkit-credentials-auto-fill-button {
 }
 
 @media (max-width: 768px) {
+    body {
+        align-items: flex-start;
+        min-height: auto;
+        padding-top: 70px;
+        padding-bottom: 24px;
+    }
+
     .container {
-        min-height: 840px;
+        min-height: auto;
+        height: auto;
+        overflow: visible;
+        border-radius: 20px;
+    }
+
+    .form-container {
+        position: relative;
+        width: 100%;
+        height: auto;
+        min-height: auto;
+        display: none;
+        padding: 32px 0;
     }
 
     .sign-in-container,
-    .sign-up-container,
-    .overlay-container {
-        width: 100%;
+    .sign-up-container {
+        left: auto;
+        opacity: 1;
+        transform: none;
+        pointer-events: all;
+    }
+
+    /* Mostra o formulário ativo */
+    .container:not(.right-panel-active) .sign-in-container {
+        display: flex;
+    }
+
+    .container.right-panel-active .sign-up-container {
+        display: flex;
     }
 
     .overlay-container {
         display: none;
     }
 
-    .sign-in-container,
-    .sign-up-container {
-        left: 0;
-        width: 100%;
+    .toggle-mobile {
+        display: block;
     }
 
-    .container.right-panel-active .sign-in-container,
-    .container.right-panel-active .sign-up-container {
-        transform: translateX(0);
+    form {
+        padding: 0 24px;
+        max-width: 100%;
     }
 
-    .sign-in-container {
-        opacity: 1;
-        z-index: 2;
-    }
-
-    .sign-up-container {
-        opacity: 0;
-        z-index: 1;
-        pointer-events: none;
-    }
-
-    .container.right-panel-active .sign-up-container {
-        opacity: 1;
-        z-index: 3;
-        pointer-events: all;
-    }
-
-    .container.right-panel-active .sign-in-container {
-        opacity: 0;
-        pointer-events: none;
+    h2 {
+        font-size: 1.7rem;
     }
 }

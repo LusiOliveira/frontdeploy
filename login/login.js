@@ -25,6 +25,21 @@ const container    = document.getElementById('container');
 signUpButton.addEventListener('click', () => container.classList.add('right-panel-active'));
 signInButton.addEventListener('click', () => container.classList.remove('right-panel-active'));
 
+const linkParaCadastro = document.getElementById('link-para-cadastro');
+const linkParaLogin    = document.getElementById('link-para-login');
+if (linkParaCadastro) {
+    linkParaCadastro.addEventListener('click', (e) => {
+        e.preventDefault();
+        container.classList.add('right-panel-active');
+    });
+}
+if (linkParaLogin) {
+    linkParaLogin.addEventListener('click', (e) => {
+        e.preventDefault();
+        container.classList.remove('right-panel-active');
+    });
+}
+
 // Abre direto no painel de cadastro se vier com ?cadastro=1
 if (new URLSearchParams(window.location.search).get('cadastro') === '1') {
     container.classList.add('right-panel-active');
