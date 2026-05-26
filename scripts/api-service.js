@@ -360,8 +360,8 @@ async function getUsuariosBloqueados() {
 // UPLOAD DE IMAGEM (Supabase Storage via REST)
 // ============================================
 
-const SUPABASE_URL = 'https://qkwpyrakxdrzimjnaczf.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF3d3B5cmFreGRyemltam5hY3pmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk1NzA1NjMsImV4cCI6MjA5NTE0NjU2M30.qMILfRuviGJDL9Ye7NH_rJbMBJQHFj6Nd0tu9qlYQnI';
+const STORAGE_URL = 'https://qkwpyrakxdrzimjnaczf.supabase.co';
+const STORAGE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF3d3B5cmFreGRyemltam5hY3pmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk1NzA1NjMsImV4cCI6MjA5NTE0NjU2M30.qMILfRuviGJDL9Ye7NH_rJbMBJQHFj6Nd0tu9qlYQnI';
 
 async function uploadImagem(file, path = '') {
     const bucket = 'imagens';
@@ -381,12 +381,12 @@ async function uploadImagem(file, path = '') {
     }
 
     // fallback: API REST direta
-    const url = `${SUPABASE_URL}/storage/v1/object/${bucket}/${fullPath}`;
+    const url = `${STORAGE_URL}/storage/v1/object/${bucket}/${fullPath}`;
     const res = await fetch(url, {
         method: 'POST',
         headers: {
-            'apikey': SUPABASE_ANON_KEY,
-            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+            'apikey': STORAGE_ANON_KEY,
+            'Authorization': `Bearer ${STORAGE_ANON_KEY}`,
             'Content-Type': file.type || 'application/octet-stream',
             'x-upsert': 'true'
         },
@@ -398,7 +398,7 @@ async function uploadImagem(file, path = '') {
         throw new Error(err.message || `Upload falou: ${res.status}`);
     }
 
-    return `${SUPABASE_URL}/storage/v1/object/public/${bucket}/${fullPath}`;
+    return `${STORAGE_URL}/storage/v1/object/public/${bucket}/${fullPath}`;
 }
 
 // ============================================
