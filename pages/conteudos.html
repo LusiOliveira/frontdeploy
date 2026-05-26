@@ -803,7 +803,7 @@
             const bottom   = document.getElementById('cv-bottom');
             const dotsEl   = document.getElementById('cv-dots');
             const countEl  = document.getElementById('cv-count');
-            if (lista.length) {
+            if (lista.length && totalPags > 1) {
                 bottom.style.display = '';
                 dotsEl.innerHTML = Array.from({ length: totalPags }, (_, i) =>
                     `<button class="cv-dot${i === pag ? ' ativo' : ''}" data-pag="${i}" aria-label="Página ${i+1}"></button>`
