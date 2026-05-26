@@ -360,16 +360,28 @@ async function getUsuariosBloqueados() {
 // UPLOAD DE IMAGEM (Supabase Storage via REST)
 // ============================================
 
-const SUPABASE_URL = 'https://nkddathnxrdazohoxfpi.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5rZGRhdGhueHJkYXpvaG94ZnBpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1MzA2ODUsImV4cCI6MjA5MTEwNjY4NX0.RyMChIPE4YHVeErYOLYtL25xkj--ek_jmJQWqrpPFwY';
+const SUPABASE_URL = 'https://qkwpyrakxdrzimjnaczf.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF3d3B5cmFreGRyemltam5hY3pmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk1NzA1NjMsImV4cCI6MjA5NTE0NjU2M30.qMILfRuviGJDL9Ye7NH_rJbMBJQHFj6Nd0tu9qlYQnI';
 
 async function uploadImagem(file, path = '') {
     const bucket = 'imagens';
     const ext = file.name.split('.').pop();
     const fileName = `${Date.now()}.${ext}`;
     const fullPath = path ? `${path}${fileName}` : fileName;
-    const url = `${SUPABASE_URL}/storage/v1/object/${bucket}/${fullPath}`;
 
+    if (window.supabaseClient && window.supabaseClient.storage) {
+        const { data, error } = await window.supabaseClient.storage
+            .from(bucket)
+            .upload(fullPath, file, { upsert: true });
+        if (error) throw error;
+        const { data: urlData } = window.supabaseClient.storage
+            .from(bucket)
+            .getPublicUrl(fullPath);
+        return urlData.publicUrl;
+    }
+
+    // fallback: API REST direta
+    const url = `${SUPABASE_URL}/storage/v1/object/${bucket}/${fullPath}`;
     const res = await fetch(url, {
         method: 'POST',
         headers: {
