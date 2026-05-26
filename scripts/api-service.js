@@ -126,9 +126,10 @@ function clearSession() {
 // ============================================
 
 async function autenticar(emailOuCpf, senha) {
+    const valor = emailOuCpf.includes('@') ? emailOuCpf : emailOuCpf.replace(/\D/g, '');
     const u = await apiFetch('/usuarios/login', {
         method: 'POST',
-        body: { emailOuCpf, senha }
+        body: { emailOuCpf: valor, senha }
     });
     return normalizeUser(u);
 }

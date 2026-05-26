@@ -1,6 +1,6 @@
 # 📋 EletroLight - Documento de Requisitos
 
-**Versão:** 1.2  
+**Versão:** 1.3  
 **Data:** Maio 2026  
 **Sistema:** Plataforma de Doação e Troca de Eletrônicos
 
@@ -34,9 +34,9 @@
 
 | ID | Requisito | Prioridade |
 |---|---|---|
-| RF-010 | O sistema deve permitir criação de anúncios com título, categoria, tipo (doação/troca), condição, descrição, foto e localização | Alta |
+| RF-010 | O sistema deve permitir criação de anúncios com título, categoria, tipo (doação/troca), condição, descrição, marca, foto e bairro | Alta |
 | RF-011 | O sistema deve permitir upload de imagens com compressão automática (máx. 400px) | Alta |
-| RF-012 | O sistema deve classificar anúncios por categoria eletrônica | Média |
+| RF-012 | O sistema deve classificar anúncios por 11 categorias de eletrônicos (celulares, notebooks, TVs, tablets, áudio, videogames, eletrodomésticos, cabos, pilhas, periféricos, outros) | Média |
 | RF-013 | O sistema deve permitir edição e exclusão de anúncios exclusivamente pelo proprietário | Alta |
 | RF-015 | O sistema deve exibir lista de anúncios com filtros por categoria | Alta |
 | RF-016 | O sistema deve exibir grid limitado a 5 anúncios na página inicial | Média |
@@ -119,17 +119,17 @@
 
 | ID | Requisito | Métrica |
 |---|---|---|
-| RNF-001 | Tempo de resposta das consultas Supabase | < 2 segundos |
+| RNF-001 | Tempo de resposta das consultas ao backend REST | < 2 segundos |
 | RNF-002 | Compressão de imagens antes do upload | Redução de 60-80% |
 | RNF-003 | Carregamento inicial da página | < 3 segundos |
-| RNF-004 | Atualização em tempo real do chat | Supabase Realtime (websocket) |
+| RNF-004 | Atualização do chat após envio | REST API com fetch imediato |
 | RNF-005 | Suporte a múltiplas requisições simultâneas | Sem bloqueio de UI |
 
 ### 2.2 Segurança
 
 | ID | Requisito | Implementação |
 |---|---|---|
-| RNF-006 | Senhas armazenadas com hash | bcrypt (via Supabase Auth) |
+| RNF-006 | Senhas armazenadas com hash | bcrypt (Spring Security) |
 | RNF-008 | Proteção contra XSS | Escape de HTML em mensagens |
 | RNF-009 | Validação de entrada em todos os formulários | Sanitização de inputs |
 | RNF-010 | Sessão expira ao fechar navegador | sessionStorage |
@@ -168,9 +168,9 @@
 
 | ID | Requisito | Estratégia |
 |---|---|---|
-| RNF-027 | Arquitetura baseada em Supabase | Escalabilidade automática |
+| RNF-027 | Arquitetura Spring Boot + PostgreSQL | Escalabilidade via deploy em nuvem |
 | RNF-028 | Limitação de resultados | Paginação implícita (top N) |
-| RNF-029 | Imagens em CDN | jsDelivr/Cloudflare |
+| RNF-029 | Imagens em Base64 | Armazenadas no PostgreSQL |
 
 ---
 
@@ -187,7 +187,7 @@
 | RN-006 | Idade máxima de 100 anos | Limite superior |
 | RN-007 | Email deve ter formato válido | Regex RFC 5322 simplificado |
 | RN-008 | Senha deve ter 8-16 caracteres, ao menos 1 letra maiúscula e 1 caractere especial | Length + Regex |
-| RN-011 | Email e CPF devem ser únicos no sistema | Verificação no Supabase |
+| RN-011 | Email e CPF devem ser únicos no sistema | Verificação no banco de dados |
 | RN-012 | CPF deve ser armazenado sem formatação | Apenas dígitos |
 
 ### 3.2 Anúncios
@@ -243,7 +243,7 @@
 | ID | Regra | Validação |
 |---|---|---|
 | RN-041 | Conteúdos são criados ativos por padrão e apenas os ativos aparecem na página inicial | ativo = true + filtro na query |
-| RN-043 | Categorias pré-definidas | Enum: reciclagem, curiosidades, dicas, impacto, legislação |
+| RN-043 | Categorias pré-definidas | Enum: reciclagem, curiosidades, dicas, impacto, legislação (conteúdos) e celulares, notebooks, TVs, tablets, áudio, videogames, eletrodomésticos, cabos, pilhas, periféricos, outros (anúncios) |
 
 ### 3.7 Segurança e Acesso
 
@@ -280,3 +280,4 @@
 | 1.0 | Abril 2026 | Versão inicial com módulos de usuários, anúncios, chat, admin, denúncias e moderação |
 | 1.1 | Maio 2026 | Removida recuperação de senha (RF-005, RNF-007, RN-046); mesclados requisitos redundantes (-11 itens) |
 | 1.2 | Maio 2026 | Substituído polling por Supabase Realtime (websocket) para atualização do chat (RNF-004); adicionado autocomplete em campos de senha do perfil |
+| 1.3 | Maio 2026 | Migração documentada de Supabase para Spring Boot REST API (backend em Java + PostgreSQL); atualizadas categorias de anúncios (11 no total); ajustados campos de anúncio (marca e bairro); corrigidas referências de armazenamento de imagens (Base64 no banco) |
