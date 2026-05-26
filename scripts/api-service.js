@@ -373,6 +373,7 @@ async function uploadImagem(file, path = '') {
     const res = await fetch(url, {
         method: 'POST',
         headers: {
+            'apikey': SUPABASE_ANON_KEY,
             'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
             'Content-Type': file.type || 'application/octet-stream',
             'x-upsert': 'true'
