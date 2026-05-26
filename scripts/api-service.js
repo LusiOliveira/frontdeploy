@@ -367,7 +367,7 @@ async function uploadImagem(file, path = '') {
     const bucket = 'imagens';
     const ext = file.name.split('.').pop();
     const fileName = `${Date.now()}.${ext}`;
-    const fullPath = path ? `${path}${fileName}` : fileName;
+    const fullPath = fileName;
 
     if (window.supabaseClient && window.supabaseClient.storage) {
         const { data, error } = await window.supabaseClient.storage
