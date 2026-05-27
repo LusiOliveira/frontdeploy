@@ -633,6 +633,10 @@ input[type="password"]::-webkit-credentials-auto-fill-button {
 }
 
 @media (max-width: 768px) {
+    html, body {
+        overflow-x: hidden;
+    }
+
     body {
         align-items: flex-start;
         min-height: auto;
@@ -641,6 +645,7 @@ input[type="password"]::-webkit-credentials-auto-fill-button {
     }
 
     .container {
+        width: 100%;
         min-height: auto;
         height: auto;
         overflow: visible;
@@ -648,33 +653,30 @@ input[type="password"]::-webkit-credentials-auto-fill-button {
     }
 
     .form-container {
-        position: relative;
-        width: 100%;
-        height: auto;
-        min-height: auto;
-        display: none;
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: auto !important;
+        display: none !important;
         padding: 32px 0;
+        transform: none !important;
+        opacity: 1 !important;
+        pointer-events: all !important;
+        z-index: auto !important;
     }
 
-    .sign-in-container,
-    .sign-up-container {
-        left: auto;
-        opacity: 1;
-        transform: none;
-        pointer-events: all;
-    }
-
-    /* Mostra o formulário ativo */
     .container:not(.right-panel-active) .sign-in-container {
-        display: flex;
+        display: flex !important;
     }
 
     .container.right-panel-active .sign-up-container {
-        display: flex;
+        display: flex !important;
     }
 
     .overlay-container {
-        display: none;
+        display: none !important;
     }
 
     .toggle-mobile {
@@ -682,7 +684,8 @@ input[type="password"]::-webkit-credentials-auto-fill-button {
     }
 
     form {
-        padding: 0 24px;
+        height: auto;
+        padding: 0 20px;
         max-width: 100%;
     }
 
