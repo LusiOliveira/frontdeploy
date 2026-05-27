@@ -574,9 +574,20 @@ main {
         right: 8px;
     }
 
-    .map-layout { flex-direction: column; height: auto; }
-    .map-view { height: 400px; }
-    .map-sidebar { max-height: 400px; }
+    .map-layout { flex-direction: column; height: auto; gap: 16px; }
+    .map-wrapper { flex: unset; }
+    .map-view { height: 300px; border-radius: 12px; }
+    .map-info { padding-left: 0; text-align: center; font-size: 0.9rem; }
+    .map-sidebar {
+        flex: unset;
+        margin-top: 0;
+        height: auto;
+        max-height: 350px;
+        padding-right: 4px;
+        gap: 10px;
+    }
+    .zona-header { padding: 10px 12px; font-size: 0.9rem; }
+    .ponto-card { padding: 12px; }
 
     /* Menu mobile */
     header {
@@ -617,7 +628,9 @@ main {
     }
     .nav-links a:last-child { border-bottom: none; }
     .btn-nav-wrap { justify-self: end; }
-    .btn-nav { padding: 8px 16px; font-size: 0.85rem; }
+    .btn-nav { padding: 8px 14px; font-size: 0.8rem; white-space: nowrap; }
+    .logo { font-size: 1.4rem; gap: 6px; }
+    .logo__img { height: 32px; }
 }
 
 /* Seção Economia Circular (Cards) */
@@ -882,7 +895,26 @@ main {
 }
 
 @media (max-width: 768px) {
-    .servicos-header { flex-direction: column; }
+    .servicos-header { flex-direction: column; gap: 0.8rem; }
+    .btn-anunciar { padding: 10px 20px; font-size: 0.92rem; }
+
+    .categorias-filtro {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        gap: 8px;
+        padding-bottom: 6px;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+    .categorias-filtro::-webkit-scrollbar { display: none; }
+
+    .cat-btn {
+        white-space: nowrap;
+        flex-shrink: 0;
+        padding: 8px 14px;
+        font-size: 0.85rem;
+    }
+
     .anuncios-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
 }
 
