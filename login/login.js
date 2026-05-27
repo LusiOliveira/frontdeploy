@@ -106,6 +106,32 @@ function calcularIdade(dataNasc) {
     return idade;
 }
 
+// --- Máscara de Data de Nascimento (DD/MM/AAAA) ---
+function mascaraData(v) {
+    v = v.replace(/\D/g, '').slice(0, 8);
+    if (v.length >= 5) {
+        v = v.replace(/(\d{2})(\d{2})(\d{1,4})/, '$1/$2/$3');
+    } else if (v.length > 2) {
+        v = v.replace(/(\d{2})(\d{0,2})/, '$1/$2');
+    }
+    return v;
+}
+
+function parseDataBR(str) {
+    const partes = str.split('/');
+    if (partes.length !== 3) return '';
+    const [dia, mes, ano] = partes;
+    if (!dia || !mes || !ano) return '';
+    return `${ano}-${mes}-${dia}`;
+}
+
+const nascInput = document.getElementById('nascimento-cadastro');
+if (nascInput) {
+    nascInput.addEventListener('input', () => {
+        nascInput.value = mascaraData(nascInput.value);
+    });
+}
+
 // --- Barra de força + checklist de requisitos de senha em tempo real ---
 const senhaReqInput = document.getElementById('senha-cadastro');
 const forcaBar      = document.getElementById('forca-bar');
@@ -179,7 +205,7 @@ async function validarCadastro() {
 
     const nome        = document.getElementById('nome-cadastro').value.trim();
     const cpf         = document.getElementById('cpf-cadastro').value.trim();
-    const nascimento  = document.getElementById('nascimento-cadastro').value;
+    const nascimento  = parseDataBR(document.getElementById('nascimento-cadastro').value.trim());
     const email       = document.getElementById('email-cadastro').value.trim();
     const senha       = document.getElementById('senha-cadastro').value;
     const confirma    = document.getElementById('senha-confirma').value;
@@ -278,12 +304,12 @@ async function validarCadastro() {
         mostrarToast('Conta criada com sucesso! Faça login para continuar.', 'sucesso');
 
         // Limpa o formulário
-        document.getElementById('nome-cadastro').value        = '';
-        document.getElementById('cpf-cadastro').value         = '';
-        document.getElementById('nascimento-cadastro').value  = '';
-        document.getElementById('email-cadastro').value       = '';
-        document.getElementById('senha-cadastro').value       = '';
-        document.getElementById('senha-confirma').value       = '';
+        document.getElementById('nome-cadastro').value = '';
+        document.getElementById('cpf-cadastro').value  = '';
+        document.getElementById('nascimento-cadastro').value = '';
+        document.getElementById('email-cadastro').value = '';
+        document.getElementById('senha-cadastro').value = '';
+        document.getElementById('senha-confirma').value = '';
         setTimeout(() => container.classList.remove('right-panel-active'), 1800);
 
     } catch (err) {
