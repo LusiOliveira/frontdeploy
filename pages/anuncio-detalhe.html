@@ -234,28 +234,6 @@
         }
         .chat-owner-avatar img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* Modal de Denúncia */
-        .denuncia-overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.5);
-            z-index: 999; display: flex; align-items: center; justify-content: center; padding: 1rem;
-        }
-        .denuncia-overlay.hidden { display: none; }
-        .denuncia-modal {
-            background: #fff; border-radius: 16px; padding: 1.8rem;
-            width: 100%; max-width: 420px; box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-        }
-        .denuncia-modal h3 { font-size: 1rem; font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; color: #DC2626; }
-        .denuncia-modal .denuncia-sub { font-size: 0.83rem; color: #6B7280; margin-bottom: 1.2rem; }
-        .denuncia-modal label { display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px; color: #374151; }
-        .denuncia-modal select, .denuncia-modal textarea {
-            width: 100%; padding: 9px 12px; border: 1.5px solid #E5E7EB;
-            border-radius: 8px; font-size: 0.88rem; color: #1F2937;
-            outline: none; transition: border-color 0.2s; font-family: inherit;
-            margin-bottom: 1rem; background: #fff;
-        }
-        .denuncia-modal select:focus, .denuncia-modal textarea:focus { border-color: #DC2626; }
-        .denuncia-modal textarea { resize: vertical; min-height: 80px; }
-        .denuncia-modal-actions { display: flex; gap: 8px; }
         .btn-enviar-denuncia {
             flex: 1; background: #DC2626; color: white; border: none;
             border-radius: 8px; padding: 10px; font-size: 0.88rem;
@@ -680,27 +658,6 @@
     <script src="../scripts/api-service.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
-    <!-- Modal Denúncia -->
-    <div class="denuncia-overlay hidden" id="modal-denuncia">
-        <div class="denuncia-modal">
-            <h3><i class="fa-solid fa-flag"></i> Denunciar conversa</h3>
-            <p class="denuncia-sub">Sua denúncia será analisada pela equipe EletroLight.</p>
-            <label for="denuncia-motivo">Motivo</label>
-            <select id="denuncia-motivo">
-                <option value="Conteúdo inapropriado">Conteúdo inapropriado</option>
-                <option value="Spam ou golpe">Spam ou golpe</option>
-                <option value="Assédio ou ameaça">Assédio ou ameaça</option>
-                <option value="Anúncio falso">Anúncio falso</option>
-                <option value="Outro">Outro</option>
-            </select>
-            <label for="denuncia-descricao">Descrição (opcional)</label>
-            <textarea id="denuncia-descricao" placeholder="Descreva o ocorrido com mais detalhes…"></textarea>
-            <div class="denuncia-modal-actions">
-                <button class="btn-cancelar-denuncia" id="btn-cancelar-denuncia">Cancelar</button>
-                <button class="btn-enviar-denuncia" id="btn-enviar-denuncia">Enviar Denúncia</button>
-            </div>
-        </div>
-    </div>
     <script src="../scripts/anuncios-data.js"></script>
     <script>
         // ---- Header: perfil dropdown ----
@@ -865,6 +822,12 @@
                 document.getElementById('modal-denuncia').classList.add('hidden');
             });
 
+            // Fechar modal ao clicar fora
+            document.getElementById('modal-denuncia').addEventListener('click', (e) => {
+                if (e.target === document.getElementById('modal-denuncia'))
+                    document.getElementById('modal-denuncia').classList.add('hidden');
+            });
+
             document.getElementById('btn-enviar-denuncia').addEventListener('click', async () => {
                 const btn = document.getElementById('btn-enviar-denuncia');
                 const tipo    = document.getElementById('den-tipo').value;
@@ -876,7 +839,6 @@
                     await window.SupabaseService.enviarDenuncia({
                         tipo,
                         alvo_email: ownerEmail,
-                        alvo_id: String(anuncioId),
                         alvo_titulo: anuncio.titulo,
                         motivo,
                         descricao: descricao || null,
@@ -941,45 +903,8 @@
                 document.addEventListener('click', () => menuDropdown.classList.add('hidden'));
                 document.getElementById('btn-denunciar-chat').addEventListener('click', () => {
                     menuDropdown.classList.add('hidden');
+                    document.getElementById('den-tipo').value = 'perfil';
                     document.getElementById('modal-denuncia').classList.remove('hidden');
-                });
-
-                document.getElementById('btn-cancelar-denuncia').addEventListener('click', () => {
-                    document.getElementById('modal-denuncia').classList.add('hidden');
-                });
-
-                document.getElementById('modal-denuncia').addEventListener('click', (e) => {
-                    if (e.target === document.getElementById('modal-denuncia'))
-                        document.getElementById('modal-denuncia').classList.add('hidden');
-                });
-
-                document.getElementById('btn-enviar-denuncia').addEventListener('click', async () => {
-                    const motivo   = document.getElementById('denuncia-motivo').value;
-                    const descricao = document.getElementById('denuncia-descricao').value.trim();
-                    const _sess = JSON.parse(sessionStorage.getItem('eletrolight_session') || 'null');
-                    if (!_sess) return;
-                    const btnD = document.getElementById('btn-enviar-denuncia');
-                    btnD.disabled = true;
-                    btnD.textContent = 'Enviando…';
-                    try {
-                        await window.SupabaseService.enviarDenuncia({
-                            tipo: 'anuncio',
-                            alvo_titulo: anuncio.titulo || '',
-                            alvo_email:  ownerEmail || '',
-                            motivo,
-                            descricao,
-                            denunciante_email: _sess.email,
-                            status: 'pendente'
-                        });
-                        document.getElementById('modal-denuncia').classList.add('hidden');
-                        document.getElementById('denuncia-descricao').value = '';
-                        alert('Denúncia enviada com sucesso. Nossa equipe irá analisar em breve. Obrigado!');
-                    } catch (_e) {
-                        alert('Erro ao enviar denúncia. Tente novamente.');
-                    } finally {
-                        btnD.disabled = false;
-                        btnD.textContent = 'Enviar Denúncia';
-                    }
                 });
 
                 await loadUserChat();

@@ -178,6 +178,15 @@
         .btn-excluir-usr { font-size: 0.75rem; font-weight: 600; padding: 5px 12px; border-radius: 6px; cursor: pointer; background: #1F2937; color: white; border: none; transition: opacity 0.2s; }
         .btn-excluir-usr:hover { opacity: 0.8; }
 
+        /* ── Pontos de Coleta ── */
+        .pontos-layout { display: grid; grid-template-columns: 360px 1fr; gap: 1.5rem; align-items: start; }
+        .ponto-item { background: var(--white); border-radius: 12px; padding: 1.2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border: 1px solid var(--border); }
+        .ponto-item-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 6px; }
+        .ponto-nome { font-weight: 700; font-size: 0.95rem; }
+        .ponto-endereco { font-size: 0.82rem; color: var(--muted); }
+        .ponto-coords { font-size: 0.75rem; color: var(--muted); margin-top: 4px; }
+        .ponto-actions { display: flex; gap: 6px; margin-top: 8px; }
+
         /* ── Toast ── */
         .toast { position: fixed; bottom: 1.5rem; right: 1.5rem; background: #1F2937; color: white; padding: 12px 20px; border-radius: 10px; font-size: 0.88rem; font-weight: 600; z-index: 9999; transform: translateY(80px); opacity: 0; transition: all 0.3s; display: flex; align-items: center; gap: 8px; box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
         .toast.show { transform: translateY(0); opacity: 1; }
@@ -186,6 +195,7 @@
 
         @media (max-width: 768px) {
             .conteudo-layout { grid-template-columns: 1fr; }
+            .pontos-layout { grid-template-columns: 1fr; }
             .form-card { position: static; }
             .pendentes-grid { grid-template-columns: 1fr; }
         }
@@ -229,6 +239,9 @@
     </button>
     <button class="tab-btn" data-tab="restritos">
         <i class="fa-solid fa-user-lock"></i> Usuários Restritos
+    </button>
+    <button class="tab-btn" data-tab="pontos">
+        <i class="fa-solid fa-map-location-dot"></i> Pontos de Coleta
     </button>
 </div>
 
@@ -296,6 +309,49 @@
         <p class="section-title"><i class="fa-solid fa-user-lock"></i> Contas com restrições ativas</p>
         <div class="restritos-list" id="lista-restritos">
             <div class="empty-state"><i class="fa-solid fa-spinner fa-spin"></i><p>Carregando…</p></div>
+        </div>
+    </div>
+
+    <!-- ── Tab: Pontos de Coleta ── -->
+    <div class="tab-panel" id="tab-pontos">
+        <div class="pontos-layout">
+            <div class="form-card">
+                <h3><i class="fa-solid fa-plus-circle"></i> <span id="ponto-form-title">Novo Ponto de Coleta</span></h3>
+                <input type="hidden" id="ponto-edit-id">
+                <div class="form-group">
+                    <label>Nome do Local</label>
+                    <input type="text" id="ponto-nome" placeholder="Ex: Ecoponto Parque do Mindu">
+                </div>
+                <div class="form-group">
+                    <label>Endereço</label>
+                    <input type="text" id="ponto-endereco" placeholder="Ex: Rua Gustavo Américo, Parque Dez">
+                </div>
+                <div class="form-group">
+                    <label>Horário / Tipo de Material</label>
+                    <input type="text" id="ponto-horario" placeholder="Ex: Pilhas, Baterias e Portáteis">
+                </div>
+                <div class="form-group">
+                    <label>Latitude</label>
+                    <input type="number" step="any" id="ponto-lat" placeholder="Ex: -3.0850">
+                </div>
+                <div class="form-group">
+                    <label>Longitude</label>
+                    <input type="number" step="any" id="ponto-lng" placeholder="Ex: -60.0050">
+                </div>
+                <button class="btn-salvar" id="btn-salvar-ponto">
+                    <i class="fa-solid fa-floppy-disk"></i> Salvar Ponto
+                </button>
+                <button class="btn-cancel-edit" id="btn-cancelar-ponto">Cancelar edição</button>
+            </div>
+            <div>
+                <p class="section-title"><i class="fa-solid fa-list"></i> Pontos cadastrados</p>
+                <div class="conteudo-lista" id="lista-pontos-admin">
+                    <div class="empty-state">
+                        <i class="fa-solid fa-spinner fa-spin"></i>
+                        <p>Carregando…</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -383,15 +439,31 @@
         setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 400); }, 3200);
     }
 
-    // ── Tabs ──
+    // ── Tabs (persiste no hash da URL) ──
+    function ativarTab(tabId) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        const btn = document.querySelector('.tab-btn[data-tab="' + tabId + '"]');
+        if (btn) btn.classList.add('active');
+        const panel = document.getElementById('tab-' + tabId);
+        if (panel) panel.classList.add('active');
+        window.location.hash = tabId;
+    }
+
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-            btn.classList.add('active');
-            document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+            ativarTab(btn.dataset.tab);
         });
     });
+
+    // Restaura aba do hash ao carregar
+    (function restaurarTab() {
+        const hash = window.location.hash.replace('#', '');
+        const tabsValidas = ['anuncios', 'denuncias', 'conteudo', 'restritos', 'pontos'];
+        if (hash && tabsValidas.includes(hash)) {
+            ativarTab(hash);
+        }
+    })();
 
     // ── Filtro denúncias ──
     let filtroAtual = 'pendente';
@@ -869,11 +941,114 @@
         } catch (e) { console.error(e); }
     }
 
+    // ─────────────────────────────────────────────
+    // TAB 5 — PONTOS DE COLETA
+    // ─────────────────────────────────────────────
+    let editandoPontoId = null;
+    let pontoMap = {};
+
+    async function carregarPontosAdmin() {
+        const el = document.getElementById('lista-pontos-admin');
+        try {
+            const lista = await window.SupabaseService.getPontosColeta();
+            pontoMap = {};
+            lista.forEach(p => { pontoMap[String(p.id)] = p; });
+
+            if (!lista.length) {
+                el.innerHTML = `<div class="empty-state">
+                    <i class="fa-solid fa-map-location-dot"></i>
+                    <h3>Nenhum ponto cadastrado</h3>
+                    <p>Adicione o primeiro ponto de coleta.</p>
+                </div>`;
+                return;
+            }
+
+            el.innerHTML = lista.map(p => `
+                <div class="ponto-item">
+                    <div class="ponto-item-head">
+                        <div>
+                            <div class="ponto-nome">${p.nome}</div>
+                            <div class="ponto-endereco"><i class="fa-solid fa-location-dot"></i> ${p.endereco}</div>
+                            <div class="ponto-coords">Lat: ${p.latitude}, Lng: ${p.longitude}</div>
+                            ${p.horario ? `<div class="ponto-coords"><i class="fa-solid fa-clock"></i> ${p.horario}</div>` : ''}
+                        </div>
+                    </div>
+                    <div class="ponto-actions">
+                        <button class="btn-ed" data-id="${p.id}"><i class="fa-solid fa-pen"></i> Editar</button>
+                        <button class="btn-del" data-id="${p.id}"><i class="fa-solid fa-trash"></i> Excluir</button>
+                    </div>
+                </div>
+            `).join('');
+
+            el.querySelectorAll('.btn-ed').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const item = pontoMap[btn.dataset.id];
+                    if (!item) return;
+                    editandoPontoId = item.id;
+                    document.getElementById('ponto-nome').value = item.nome;
+                    document.getElementById('ponto-endereco').value = item.endereco;
+                    document.getElementById('ponto-horario').value = item.horario || '';
+                    document.getElementById('ponto-lat').value = item.latitude;
+                    document.getElementById('ponto-lng').value = item.longitude;
+                    document.getElementById('ponto-form-title').textContent = 'Editar Ponto de Coleta';
+                    document.getElementById('btn-cancelar-ponto').style.display = 'block';
+                    document.querySelector('.pontos-layout .form-card').scrollIntoView({ behavior: 'smooth' });
+                });
+            });
+
+            el.querySelectorAll('.btn-del').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    if (!confirm('Excluir este ponto de coleta permanentemente?')) return;
+                    await window.SupabaseService.deletarPontoColeta(btn.dataset.id);
+                    toast('Ponto excluído.');
+                    carregarPontosAdmin();
+                });
+            });
+        } catch (e) {
+            console.error(e);
+            el.innerHTML = `<div class="empty-state"><i class="fa-solid fa-triangle-exclamation"></i><h3>Erro ao carregar</h3><p>${e.message}</p></div>`;
+        }
+    }
+
+    document.getElementById('btn-salvar-ponto').addEventListener('click', async () => {
+        const nome      = document.getElementById('ponto-nome').value.trim();
+        const endereco  = document.getElementById('ponto-endereco').value.trim();
+        const horario   = document.getElementById('ponto-horario').value.trim() || null;
+        const latitude  = parseFloat(document.getElementById('ponto-lat').value);
+        const longitude = parseFloat(document.getElementById('ponto-lng').value);
+
+        if (!nome || !endereco || isNaN(latitude) || isNaN(longitude)) {
+            toast('Preencha nome, endereço, latitude e longitude.', 'erro');
+            return;
+        }
+
+        const payload = { nome, endereco, horario, latitude, longitude };
+        if (editandoPontoId) {
+            await window.SupabaseService.atualizarPontoColeta(editandoPontoId, payload);
+            toast('Ponto atualizado!');
+        } else {
+            await window.SupabaseService.adicionarPontoColeta(payload);
+            toast('Ponto adicionado!');
+        }
+        limparFormPonto();
+        carregarPontosAdmin();
+    });
+
+    document.getElementById('btn-cancelar-ponto').addEventListener('click', limparFormPonto);
+
+    function limparFormPonto() {
+        editandoPontoId = null;
+        ['ponto-nome', 'ponto-endereco', 'ponto-horario', 'ponto-lat', 'ponto-lng'].forEach(id => document.getElementById(id).value = '');
+        document.getElementById('ponto-form-title').textContent = 'Novo Ponto de Coleta';
+        document.getElementById('btn-cancelar-ponto').style.display = 'none';
+    }
+
     // ── Init ──
     carregarPendentes();
     carregarDenuncias();
     carregarConteudo();
     carregarRestritos();
+    carregarPontosAdmin();
 
 </script>
 </body>

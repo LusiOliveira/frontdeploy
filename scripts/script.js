@@ -81,122 +81,67 @@ const ecoIcon = L.divIcon({
     popupAnchor: [0, -44],
 });
 
-// 2. Base de Dados (Array) dos Pontos de Coleta
-const pontosDeColeta = [
-    {
-        id: 1,
-        nome: 'Ecoponto Parque do Mindu',
-        endereco: 'Rua Gustavo Américo, Parque Dez',
-        tipo: 'Pilhas, Baterias e Portáteis',
-        zona: 'Zona Norte',
-        lat: -3.0850,
-        lng: -60.0050,
-    },
-    {
-        id: 2,
-        nome: 'Recicla Manaus Centro',
-        endereco: 'Av. Eduardo Ribeiro, Centro',
-        tipo: 'Eletrônicos de Grande Porte',
-        zona: 'Zona Leste',
-        lat: -3.1300,
-        lng: -60.0200,
-    },
-    {
-        id: 3,
-        nome: 'Galpão EcoColeta Leste',
-        endereco: 'Av. Autaz Mirim, Zona Leste',
-        tipo: 'TVs e Monitores',
-        zona: 'Zona Oeste',
-        lat: -3.0700,
-        lng: -59.9500,
-    },
-    {
-        id: 4,
-        nome: 'Ponto Verde UFAM',
-        endereco: 'Av. General Rodrigo Octavio, Coroado',
-        tipo: 'Informática e Celulares',
-        zona: 'Zona Sul',
-        lat: -3.0900,
-        lng: -59.9600,
-    },
-];
-
-// 3. Gerar Marcadores e Lista Dinamicamente (agrupados por Zona)
+// 2. Carregar pontos do backend e renderizar
 const listaPontosContainer = document.getElementById('lista-pontos');
 const marcadoresCriados = {};
 let pontoAtivoId = null;
 
-const zonas = ['Zona Norte', 'Zona Leste', 'Zona Oeste', 'Zona Sul'];
-const pontosPorZona = {};
-zonas.forEach(z => pontosPorZona[z] = []);
-pontosDeColeta.forEach(p => pontosPorZona[p.zona].push(p));
+function renderPonto(ponto) {
+    const lat = ponto.latitude != null ? ponto.latitude : ponto.lat;
+    const lng = ponto.longitude != null ? ponto.longitude : ponto.lng;
+    const tipoLabel = ponto.horario || ponto.tipo || 'Ponto de Coleta';
 
-zonas.forEach(zona => {
-    const grupo = document.createElement('div');
-    grupo.className = 'zona-grupo';
+    const marker = L.marker([lat, lng], { icon: ecoIcon }).addTo(map);
+    marker.bindPopup(`<b>${ponto.nome}</b><br>${ponto.endereco}<br><em>${tipoLabel}</em>`);
+    marcadoresCriados[ponto.id] = marker;
 
-    const header = document.createElement('button');
-    header.className = 'zona-header';
-    header.innerHTML = `<span><i class="fa-solid fa-map-location-dot"></i> ${zona}</span><i class="fa-solid fa-chevron-down zona-seta"></i>`;
+    const card = document.createElement('div');
+    card.className = 'ponto-card';
+    card.innerHTML = `
+        <h3>${ponto.nome}</h3>
+        <p><i class="fa-solid fa-location-dot"></i> ${ponto.endereco}</p>
+        <span class="tag-tipo">${tipoLabel}</span>
+    `;
 
-    const lista = document.createElement('div');
-    lista.className = 'zona-lista';
+    const interagirComPonto = () => {
+        if (pontoAtivoId === ponto.id) {
+            map.flyTo([-3.1190, -60.0217], 12, { animate: true, duration: 1.5 });
+            marker.closePopup();
+            card.classList.remove('ativo');
+            pontoAtivoId = null;
+        } else {
+            document.querySelectorAll('.ponto-card').forEach((c) => c.classList.remove('ativo'));
+            card.classList.add('ativo');
+            map.flyTo([lat, lng], 16, { animate: true, duration: 1.5 });
+            marker.openPopup();
+            card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            pontoAtivoId = ponto.id;
+        }
+    };
 
-    header.addEventListener('click', () => {
-        const aberta = lista.classList.toggle('aberta');
-        header.querySelector('.zona-seta').style.transform = aberta ? 'rotate(180deg)' : '';
-    });
+    card.addEventListener('click', interagirComPonto);
+    marker.on('click', interagirComPonto);
 
-    pontosPorZona[zona].forEach(ponto => {
-        // A. Marcador no mapa
-        const marker = L.marker([ponto.lat, ponto.lng], { icon: ecoIcon }).addTo(map);
-        marker.bindPopup(`<b>${ponto.nome}</b><br>${ponto.endereco}<br><em>Recolhe: ${ponto.tipo}</em>`);
-        marcadoresCriados[ponto.id] = marker;
+    listaPontosContainer.appendChild(card);
+}
 
-        // B. Cartão na lista
-        const card = document.createElement('div');
-        card.className = 'ponto-card';
-        card.innerHTML = `
-            <h3>${ponto.nome}</h3>
-            <p><i class="fa-solid fa-location-dot"></i> ${ponto.endereco}</p>
-            <span class="tag-tipo">${ponto.tipo}</span>
-        `;
+async function carregarPontosColeta() {
+    if (!listaPontosContainer) return;
+    try {
+        const pontos = await window.SupabaseService.getPontosColeta();
+        listaPontosContainer.innerHTML = '';
+        Object.values(marcadoresCriados).forEach(m => map.removeLayer(m));
+        (pontos || []).forEach(renderPonto);
+    } catch (e) {
+        console.error('Erro ao carregar pontos de coleta:', e);
+        listaPontosContainer.innerHTML = `<div class="empty-state" style="text-align:center;padding:2rem;color:#6B7280;">
+            <i class="fa-solid fa-triangle-exclamation" style="font-size:2rem;display:block;margin-bottom:0.5rem;color:#DC2626;"></i>
+            <p>Erro ao carregar pontos de coleta.</p>
+        </div>`;
+    }
+}
 
-        // C. Interação
-        const interagirComPonto = () => {
-            if (pontoAtivoId === ponto.id) {
-                map.flyTo([-3.1190, -60.0217], 12, { animate: true, duration: 1.5 });
-                marker.closePopup();
-                card.classList.remove('ativo');
-                pontoAtivoId = null;
-            } else {
-                document.querySelectorAll('.ponto-card').forEach((c) => c.classList.remove('ativo'));
-                card.classList.add('ativo');
-                map.flyTo([ponto.lat, ponto.lng], 16, { animate: true, duration: 1.5 });
-                marker.openPopup();
-                card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                pontoAtivoId = ponto.id;
-            }
-        };
-
-        card.addEventListener('click', interagirComPonto);
-
-        // Clique no pino: abre o grupo se fechado, depois interage
-        marker.on('click', () => {
-            if (!lista.classList.contains('aberta')) {
-                lista.classList.add('aberta');
-                header.querySelector('.zona-seta').style.transform = 'rotate(180deg)';
-            }
-            interagirComPonto();
-        });
-
-        lista.appendChild(card);
-    });
-
-    grupo.appendChild(header);
-    grupo.appendChild(lista);
-    listaPontosContainer.appendChild(grupo);
-});
+carregarPontosColeta();
 
 // --- Lógica do Chatbot ---
 const chatbotToggle = document.getElementById('chatbot-toggle');

@@ -331,6 +331,44 @@ async function deletarConteudo(id) {
 }
 
 // ============================================
+// PONTOS DE COLETA
+// ============================================
+
+async function getPontosColeta() {
+    return apiFetch('/pontosColetas');
+}
+
+async function getPontoColeta(id) {
+    return apiFetch('/pontosColetas/' + id);
+}
+
+async function adicionarPontoColeta(ponto) {
+    const payload = {
+        nome: ponto.nome,
+        latitude: ponto.latitude,
+        longitude: ponto.longitude,
+        endereco: ponto.endereco,
+        horario: ponto.horario || null
+    };
+    return apiFetch('/pontosColetas', { method: 'POST', body: payload });
+}
+
+async function atualizarPontoColeta(id, ponto) {
+    const payload = {
+        nome: ponto.nome,
+        latitude: ponto.latitude,
+        longitude: ponto.longitude,
+        endereco: ponto.endereco,
+        horario: ponto.horario || null
+    };
+    return apiFetch('/pontosColetas/' + id, { method: 'PUT', body: payload });
+}
+
+async function deletarPontoColeta(id) {
+    return apiFetch('/pontosColetas/' + id, { method: 'DELETE' });
+}
+
+// ============================================
 // ADMIN — Punições
 // ============================================
 
@@ -446,6 +484,11 @@ window.SupabaseService = {
     adicionarConteudo,
     atualizarConteudo,
     deletarConteudo,
+    getPontosColeta,
+    getPontoColeta,
+    adicionarPontoColeta,
+    atualizarPontoColeta,
+    deletarPontoColeta,
     uploadImagem,
     aplicarPunicao,
     removerPunicao,
