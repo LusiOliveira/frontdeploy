@@ -46,6 +46,7 @@ async function findUserByEmail(email) {
 }
 
 async function findUserByCPF(cpf) {
+    if (!cpf) return null;
     const cleanCPF = cpf.replace(/\D/g, '');
     const { data, error } = await supabaseInstance
         .from('users')
@@ -75,7 +76,7 @@ async function saveUser(user) {
         .from('users')
         .insert([{
             nome: user.nome,
-            cpf: user.cpf.replace(/\D/g, ''),
+            cpf: user.cpf ? user.cpf.replace(/\D/g, '') : null,
             nascimento: user.nascimento,
             email: user.email.toLowerCase(),
             senha: user.senha,

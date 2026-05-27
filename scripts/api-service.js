@@ -85,7 +85,7 @@ async function findUserById(userId) {
 async function saveUser(user) {
     const payload = {
         nome: user.nome,
-        cpf: user.cpf.replace(/\D/g, ''),
+        cpf: user.cpf ? user.cpf.replace(/\D/g, '') : null,
         nascimento: user.nascimento,
         email: user.email.toLowerCase(),
         senha: user.senha,
@@ -453,22 +453,37 @@ window.SupabaseService = {
     getUsuariosBloqueados
 };
 
-// Menu hamburger (mobile)
+// --- MENU HAMBURGER (todas as páginas) ---
 document.addEventListener('DOMContentLoaded', () => {
-    const hamburger = document.getElementById('nav-hamburger');
+    const navHamburger = document.getElementById('nav-hamburger');
     const navLinks = document.getElementById('nav-links');
-    if (hamburger && navLinks) {
-        hamburger.addEventListener('click', () => {
-            const isOpen = navLinks.classList.toggle('is-open');
-            hamburger.classList.toggle('is-active', isOpen);
-            hamburger.setAttribute('aria-expanded', isOpen);
+    if (!navHamburger || !navLinks) return;
+
+    navHamburger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const aberto = navLinks.classList.toggle('is-open');
+        navHamburger.classList.toggle('is-active', aberto);
+        navHamburger.setAttribute('aria-expanded', aberto);
+    });
+
+    // Fecha ao clicar em qualquer link
+    navLinks.querySelectorAll('a').forEach((link) => {
+        link.addEventListener('click', () => {
+            navLinks.classList.remove('is-open');
+            navHamburger.classList.remove('is-active');
+            navHamburger.setAttribute('aria-expanded', 'false');
         });
-        navLinks.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => {
+    });
+
+    // Fecha ao tocar/clicar fora do menu
+    document.addEventListener('click', (e) => {
+        if (navLinks.classList.contains('is-open')) {
+            if (!navLinks.contains(e.target) && !navHamburger.contains(e.target)) {
                 navLinks.classList.remove('is-open');
-                hamburger.classList.remove('is-active');
-                hamburger.setAttribute('aria-expanded', 'false');
-            });
-        });
-    }
+                navHamburger.classList.remove('is-active');
+                navHamburger.setAttribute('aria-expanded', 'false');
+            }
+        }
+    });
 });
+

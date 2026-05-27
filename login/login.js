@@ -198,8 +198,8 @@ async function validarCadastro() {
         return;
     }
 
-    // --- Validação do CPF ---
-    if (!validarCPF(cpf)) {
+    // --- Validação do CPF (opcional) ---
+    if (cpf && !validarCPF(cpf)) {
         setErro('cpf-cadastro', 'CPF inválido. Verifique o número digitado.');
         mostrarToast('CPF inválido. Verifique o número digitado.', 'erro');
         return;
@@ -263,15 +263,17 @@ async function validarCadastro() {
             return;
         }
 
-        const existingCPF = await window.SupabaseService.findUserByCPF(cpf);
-        if (existingCPF) {
-            setErro('cpf-cadastro', 'Este CPF já está cadastrado.');
-            mostrarToast('Este CPF já está cadastrado.', 'erro');
-            return;
+        if (cpf) {
+            const existingCPF = await window.SupabaseService.findUserByCPF(cpf);
+            if (existingCPF) {
+                setErro('cpf-cadastro', 'Este CPF já está cadastrado.');
+                mostrarToast('Este CPF já está cadastrado.', 'erro');
+                return;
+            }
         }
 
         // --- Salva no Supabase ---
-        await window.SupabaseService.saveUser({ nome, cpf, nascimento, email, senha });
+        await window.SupabaseService.saveUser({ nome, cpf: cpf || null, nascimento, email, senha });
 
         mostrarToast('Conta criada com sucesso! Faça login para continuar.', 'sucesso');
 
