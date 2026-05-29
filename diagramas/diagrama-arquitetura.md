@@ -55,3 +55,156 @@ Backend --> Externos : HTTP\n(Upload Thumbnails)
 
 @enduml
 ```
+
+---
+
+# Diagrama de Classes — EletroLight (Domínio / JPA)
+
+> **UML conforme OMG** — Diagrama de classes de domínio extraído do pacote `com.projetoEletro.domain.model`.
+
+```plantuml
+@startuml
+
+skinparam backgroundColor #fefefe
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+skinparam class {
+    BackgroundColor #f5f5f5
+    BorderColor #424242
+    BorderThickness 2
+    ArrowColor #01579b
+    ArrowThickness 2
+}
+
+title EletroLight - Diagrama de Classes de Domínio
+
+class Usuario {
+    - Long id
+    - String email
+    - String senha
+    - String foto
+    - String resetToken
+    - String resetTokenExpires
+    - Boolean bloqueioPublicacao
+    - Boolean bloqueioChat
+}
+
+class Pessoa {
+    - Long id
+    - String nome
+    - String cpf
+    - LocalDate dataNascimento
+    - String whatsapp
+}
+
+class Anuncio {
+    - Long id
+    - String titulo
+    - String descricao
+    - String tipo
+    - String condicao
+    - String marca
+    - String foto
+    - String bairro
+    - String nome
+    - String email
+    - String whatsapp
+    - String status
+    - LocalDateTime dataPublicacao
+}
+
+class Categoria {
+    - Long id
+    - String slug
+    - String nome
+    - String icone
+}
+
+class Grupo {
+    - Long id
+    - String descricao
+}
+
+class UsuarioGrupo {
+    - Long id
+}
+
+class Mensagem {
+    - Long id
+    - String texto
+    - String remetenteEmail
+    - String remetenteNome
+    - String destinatarioEmail
+    - String destinatarioNome
+    - LocalDateTime dataCriacao
+}
+
+class Denuncia {
+    - Long id
+    - String tipo
+    - String alvoEmail
+    - String alvoTitulo
+    - String motivo
+    - String descricao
+    - String denuncianteEmail
+    - String status
+    - LocalDateTime dataCriacao
+}
+
+class ConteudoEducativo {
+    - Long id
+    - String titulo
+    - String categoria
+    - String texto
+    - String linkVideo
+    - String linkOriginal
+    - String imagem
+    - Boolean ativo
+    - LocalDateTime dataCriacao
+}
+
+class PontoColeta {
+    - Long id
+    - String nome
+    - String latitude
+    - String longitude
+    - String endereco
+    - String horario
+}
+
+' Relacionamentos
+Usuario "1" -- "1" Pessoa : possui >
+Usuario "1" -- "0..*" Anuncio : publica >
+Usuario "1" -- "0..*" Denuncia : registra >
+Usuario "1" -- "0..*" UsuarioGrupo : participa >
+Anuncio "1" -- "0..*" Mensagem : recebe >
+Anuncio "*" -- "1" Categoria : classificado em >
+Anuncio "1" -- "0..*" Denuncia : alvo de >
+Grupo "1" -- "0..*" UsuarioGrupo : contém >
+UsuarioGrupo "*" -- "1" Usuario
+UsuarioGrupo "*" -- "1" Grupo
+
+note right of Usuario
+    **@Entity** — Tabela: usuario
+    @OneToOne → Pessoa
+    @OneToMany → Anuncio, Denuncia, UsuarioGrupo
+end note
+
+note right of Anuncio
+    **@Entity** — Tabela: anuncio
+    @ManyToOne → Usuario, Categoria
+    @OneToMany → Mensagem, Denuncia
+end note
+
+note bottom of ConteudoEducativo
+    Entidade independente
+    (sem relacionamentos com outras classes)
+end note
+
+note bottom of PontoColeta
+    Entidade independente
+    (sem relacionamentos com outras classes)
+end note
+
+@enduml
+```

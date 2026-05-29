@@ -1,13 +1,21 @@
 /* Variáveis de Cores para facilitar a manutenção */
 :root {
     --primary-color: #059669;
+    --primary-dark: #047857;
+    --primary-light: rgba(5, 150, 105, 0.12);
     --secondary-color: #10B981;
     --accent-color: #F59E0B;
     --hover-blue: #1E40AF;
     --bg-light: #F9FAFB;
     --text-dark: #1F2937;
+    --text-mid: #374151;
     --text-light: #6B7280;
     --white: #FFFFFF;
+
+    --green-bg: #f0faf5;
+    --green-border: #c6ead8;
+    --green-card-bg: #cfead5;
+    --green-card-border: #b9ddcf;
 }
 
 /* Rolagem suave nos links âncora (#inicio, #mapa-coleta, etc.) */
@@ -21,6 +29,10 @@ html {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+*, *::before, *::after {
+    font-family: inherit;
 }
 
 body {
@@ -1561,3 +1573,12 @@ footer {
 .sobre-robo-orbit--tl { top: 20px; left: -10px; }
 .sobre-robo-orbit--tr { top: 20px; right: -10px; }
 .sobre-robo-orbit--br { bottom: 40px; right: -14px; }
+
+/* Utilitários */
+.section-title--no-top { padding-top: 0; margin-bottom: 0.5rem; }
+.tab-card-centro { text-align: center; }
+.tab-link-texto { color: #4B5563; }
+.tab-link-texto i,
+.tab-link-texto a { color: var(--primary-color); }
+.tab-link-texto a { font-weight: 700; }
+.footer-sub { font-size: 0.9rem; opacity: 0.7; margin-top: 5px; }
