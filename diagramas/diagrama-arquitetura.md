@@ -76,7 +76,9 @@ skinparam class {
     ArrowThickness 2
 }
 
-title EletroLight - Diagrama de Classes de Domínio
+title EletroLight - Diagrama de Classes de Domínio + Services
+
+' ── Entidades de Domínio ───────────────────────
 
 class Usuario {
     - Long id
@@ -87,6 +89,15 @@ class Usuario {
     - String resetTokenExpires
     - Boolean bloqueioPublicacao
     - Boolean bloqueioChat
+    --
+    + getId(): Long
+    + getEmail(): String
+    + getSenha(): String
+    + getPessoa(): Pessoa
+    + isBloqueioPublicacao(): Boolean
+    + isBloqueioChat(): Boolean
+    + setBloqueioPublicacao(Boolean): void
+    + setBloqueioChat(Boolean): void
 }
 
 class Pessoa {
@@ -95,6 +106,16 @@ class Pessoa {
     - String cpf
     - LocalDate dataNascimento
     - String whatsapp
+    --
+    + getId(): Long
+    + getNome(): String
+    + getCpf(): String
+    + getDataNascimento(): LocalDate
+    + getWhatsapp(): String
+    + setNome(String): void
+    + setCpf(String): void
+    + setDataNascimento(LocalDate): void
+    + setWhatsapp(String): void
 }
 
 class Anuncio {
@@ -111,6 +132,21 @@ class Anuncio {
     - String whatsapp
     - String status
     - LocalDateTime dataPublicacao
+    --
+    + getId(): Long
+    + getTitulo(): String
+    + getDescricao(): String
+    + getTipo(): String
+    + getCondicao(): String
+    + getMarca(): String
+    + getFoto(): String
+    + getStatus(): String
+    + getDataPublicacao(): LocalDateTime
+    + getUsuario(): Usuario
+    + getCategoria(): Categoria
+    + setStatus(String): void
+    + setTitulo(String): void
+    + setDescricao(String): void
 }
 
 class Categoria {
@@ -118,15 +154,33 @@ class Categoria {
     - String slug
     - String nome
     - String icone
+    --
+    + getId(): Long
+    + getSlug(): String
+    + getNome(): String
+    + getIcone(): String
+    + setSlug(String): void
+    + setNome(String): void
+    + setIcone(String): void
 }
 
 class Grupo {
     - Long id
     - String descricao
+    --
+    + getId(): Long
+    + getDescricao(): String
+    + setDescricao(String): void
 }
 
 class UsuarioGrupo {
     - Long id
+    --
+    + getId(): Long
+    + getUsuario(): Usuario
+    + getGrupo(): Grupo
+    + setUsuario(Usuario): void
+    + setGrupo(Grupo): void
 }
 
 class Mensagem {
@@ -137,6 +191,15 @@ class Mensagem {
     - String destinatarioEmail
     - String destinatarioNome
     - LocalDateTime dataCriacao
+    --
+    + getId(): Long
+    + getTexto(): String
+    + getRemetenteEmail(): String
+    + getDestinatarioEmail(): String
+    + getDataCriacao(): LocalDateTime
+    + getAnuncio(): Anuncio
+    + setTexto(String): void
+    + setAnuncio(Anuncio): void
 }
 
 class Denuncia {
@@ -149,6 +212,16 @@ class Denuncia {
     - String denuncianteEmail
     - String status
     - LocalDateTime dataCriacao
+    --
+    + getId(): Long
+    + getTipo(): String
+    + getMotivo(): String
+    + getStatus(): String
+    + getDataCriacao(): LocalDateTime
+    + getUsuario(): Usuario
+    + getAnuncio(): Anuncio
+    + setStatus(String): void
+    + setDescricao(String): void
 }
 
 class ConteudoEducativo {
@@ -161,6 +234,17 @@ class ConteudoEducativo {
     - String imagem
     - Boolean ativo
     - LocalDateTime dataCriacao
+    --
+    + getId(): Long
+    + getTitulo(): String
+    + getCategoria(): String
+    + getTexto(): String
+    + getLinkVideo(): String
+    + getAtivo(): Boolean
+    + getDataCriacao(): LocalDateTime
+    + setTitulo(String): void
+    + setAtivo(Boolean): void
+    + setDataCriacao(LocalDateTime): void
 }
 
 class PontoColeta {
@@ -170,9 +254,127 @@ class PontoColeta {
     - String longitude
     - String endereco
     - String horario
+    --
+    + getId(): Long
+    + getNome(): String
+    + getLatitude(): String
+    + getLongitude(): String
+    + getEndereco(): String
+    + getHorario(): String
+    + setNome(String): void
+    + setLatitude(String): void
+    + setLongitude(String): void
+    + setEndereco(String): void
+    + setHorario(String): void
 }
 
-' Relacionamentos
+' ── Interfaces de Service ──────────────────────
+
+interface "<<interface>>\nUsuarioService" as UsuarioServiceIF {
+    + listarUsuario(): List<UsuarioResponseDTO>
+    + salvarUsuario(UsuarioPostDTO): UsuarioResponseDTO
+    + buscarUsuarioPorId(Long): UsuarioResponseDTO
+    + atualizarUsuario(Long, UsuarioPutDTO): UsuarioResponseDTO
+    + deletarUsuario(Long): void
+    + buscarPorEmail(String): UsuarioResponseDTO
+    + autenticar(String, String): UsuarioResponseDTO
+    + alterarSenha(String, String, String): void
+    + registrar(RegistroDTO): UsuarioResponseDTO
+    + listarBloqueados(): List<UsuarioResponseDTO>
+    + aplicarPunicao(Long, Boolean, Boolean): UsuarioResponseDTO
+    + removerPunicao(Long): UsuarioResponseDTO
+    + excluirContaComAnuncios(Long): void
+}
+
+interface "<<interface>>\nPessoaService" as PessoaServiceIF {
+    + listarPessoa(): List<PessoaResponseDTO>
+    + salvarPessoa(PessoaPostDTO): PessoaResponseDTO
+    + buscarPessoaId(Long): PessoaResponseDTO
+    + atualizarGrupoPorId(Long, PessoaPutDTO): PessoaResponseDTO
+    + deletarPessoa(Long): void
+    - validarPessoa(String, LocalDate, Long): void
+    - isCpfValido(String): boolean
+}
+
+interface "<<interface>>\nAnuncioService" as AnuncioServiceIF {
+    + listarAnuncios(): List<AnuncioResponseDTO>
+    + salvarAnuncio(AnuncioPostDTO): AnuncioResponseDTO
+    + buscarAnuncioPorId(Long): AnuncioResponseDTO
+    + buscarAnunciosPorUsuario(Long): List<AnuncioResponseDTO>
+    + buscarAnunciosPorCategoria(Long): List<AnuncioResponseDTO>
+    + atualizarAnuncio(Long, AnuncioPutDTO): AnuncioResponseDTO
+    + deletarAnuncio(Long): void
+    + listarPendentes(): List<AnuncioResponseDTO>
+    + aprovar(Long): AnuncioResponseDTO
+    + rejeitar(Long): AnuncioResponseDTO
+    + listarAprovados(): List<AnuncioResponseDTO>
+}
+
+interface "<<interface>>\nCategoriaService" as CategoriaServiceIF {
+    + listarCategorias(): List<CategoriaResponseDTO>
+    + salvarCategoria(CategoriaPostDTO): CategoriaResponseDTO
+    + buscarCategoriaPorId(Long): CategoriaResponseDTO
+    + buscarCategoriaPorSlug(String): CategoriaResponseDTO
+    + atualizarCategoria(Long, CategoriaPutDTO): CategoriaResponseDTO
+    + deletarCategoria(Long): void
+}
+
+interface "<<interface>>\nMensagemService" as MensagemServiceIF {
+    + listar(): List<MensagemResponseDTO>
+    + buscarPorId(Long): MensagemResponseDTO
+    + criar(MensagemPostDTO): MensagemResponseDTO
+    + atualizar(Long, MensagemPutDTO): MensagemResponseDTO
+    + deletar(Long): void
+    + listarPorAnuncio(Long): List<MensagemResponseDTO>
+    + listarPorEmail(String): List<MensagemResponseDTO>
+    + listarConversa(String, String, Long): List<MensagemResponseDTO>
+}
+
+interface "<<interface>>\nDenunciaService" as DenunciaServiceIF {
+    + listarDenuncias(): List<DenunciaResponseDTO>
+    + salvarDenuncia(DenunciaPostDTO): DenunciaResponseDTO
+    + buscarDenunciaPorId(Long): DenunciaResponseDTO
+    + buscarDenunciasPorUsuario(Long): List<DenunciaResponseDTO>
+    + atualizarDenuncia(Long, DenunciaPutDTO): DenunciaResponseDTO
+    + deletarDenuncia(Long): void
+    + resolver(Long): DenunciaResponseDTO
+}
+
+interface "<<interface>>\nConteudoEducativoService" as ConteudoServiceIF {
+    + listarConteudoEducativo(): List<ConteudoEducativoResponseDTO>
+    + salvarConteudoEducativo(ConteudoEducativoPostDTO): ConteudoEducativoResponseDTO
+    + listarAtivos(): List<ConteudoEducativoResponseDTO>
+    + buscarConteudoEducativoId(Long): ConteudoEducativoResponseDTO
+    + atualizarConteudoEducativo(Long, ConteudoEducativoPutDTO): ConteudoEducativoResponseDTO
+    + deletarConteudoEducativo(Long): void
+}
+
+interface "<<interface>>\nPontoColetaService" as PontoColetaServiceIF {
+    + listarPontoColeta(): List<PontoColetaResponseDTO>
+    + salvarPontocoleta(PontoColetaPostDTO): PontoColetaResponseDTO
+    + buscarpontoColeta(Long): PontoColetaResponseDTO
+    + atualizarPontoColeta(Long, PontoColetaPutDTO): PontoColetaResponseDTO
+    + deletarPontoColeta(Long): void
+}
+
+interface "<<interface>>\nGrupoService" as GrupoServiceIF {
+    + listarGrupos(): List<GrupoResponseDTO>
+    + salvarGrupo(GrupoPostDTO): GrupoResponseDTO
+    + buscarGrupoPorId(Long): GrupoResponseDTO
+    + atualizarGrupo(Long, GrupoPutDTO): GrupoResponseDTO
+    + deletarGrupo(Long): void
+}
+
+interface "<<interface>>\nUsuarioGrupoService" as UsuarioGrupoServiceIF {
+    + listarUsuarioGrupos(): List<UsuarioGrupoResponseDTO>
+    + salvarUsuarioGrupo(UsuarioGrupoPostDTO): UsuarioGrupoResponseDTO
+    + buscarUsuarioGrupoPorId(Long): UsuarioGrupoResponseDTO
+    + buscarPorUsuario(Long): List<UsuarioGrupoResponseDTO>
+    + buscarPorGrupo(Long): List<UsuarioGrupoResponseDTO>
+    + deletarUsuarioGrupo(Long): void
+}
+
+' ── Relacionamentos de Domínio ────────────────
 Usuario "1" -- "1" Pessoa : possui >
 Usuario "1" -- "0..*" Anuncio : publica >
 Usuario "1" -- "0..*" Denuncia : registra >
@@ -183,6 +385,24 @@ Anuncio "1" -- "0..*" Denuncia : alvo de >
 Grupo "1" -- "0..*" UsuarioGrupo : contém >
 UsuarioGrupo "*" -- "1" Usuario
 UsuarioGrupo "*" -- "1" Grupo
+
+' ── Relacionamentos Service → Domínio ───────
+UsuarioServiceIF ..> Usuario : <<use>>
+PessoaServiceIF ..> Pessoa : <<use>>
+AnuncioServiceIF ..> Anuncio : <<use>>
+AnuncioServiceIF ..> Categoria : <<use>>
+CategoriaServiceIF ..> Categoria : <<use>>
+MensagemServiceIF ..> Mensagem : <<use>>
+MensagemServiceIF ..> Anuncio : <<use>>
+DenunciaServiceIF ..> Denuncia : <<use>>
+DenunciaServiceIF ..> Usuario : <<use>>
+DenunciaServiceIF ..> Anuncio : <<use>>
+ConteudoServiceIF ..> ConteudoEducativo : <<use>>
+PontoColetaServiceIF ..> PontoColeta : <<use>>
+GrupoServiceIF ..> Grupo : <<use>>
+UsuarioGrupoServiceIF ..> UsuarioGrupo : <<use>>
+UsuarioGrupoServiceIF ..> Usuario : <<use>>
+UsuarioGrupoServiceIF ..> Grupo : <<use>>
 
 note right of Usuario
     **@Entity** — Tabela: usuario
@@ -204,6 +424,16 @@ end note
 note bottom of PontoColeta
     Entidade independente
     (sem relacionamentos com outras classes)
+end note
+
+note bottom of UsuarioServiceIF
+    **Stereotype:** <<Service>>
+    CRUD + autenticação + punições
+end note
+
+note bottom of AnuncioServiceIF
+    **Stereotype:** <<Service>>
+    CRUD + moderação (aprovar/rejeitar)
 end note
 
 @enduml

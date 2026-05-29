@@ -86,7 +86,7 @@ async function saveUser(user) {
     const payload = {
         nome: user.nome,
         cpf: user.cpf ? user.cpf.replace(/\D/g, '') : null,
-        nascimento: user.nascimento,
+        dataNascimento: user.nascimento,
         email: user.email.toLowerCase(),
         senha: user.senha,
         whatsapp: user.whatsapp || null,
