@@ -85,7 +85,7 @@ async function findUserById(userId) {
 async function saveUser(user) {
     const payload = {
         nome: user.nome,
-        cpf: user.cpf ? user.cpf.replace(/\D/g, '') : null,
+        cpf: user.cpf ? user.cpf.replace(/\D/g, '') : '',
         dataNascimento: user.nascimento,
         email: user.email.toLowerCase(),
         senha: user.senha,
