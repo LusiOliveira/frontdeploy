@@ -11,18 +11,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../styles/style.css">
     <style>
-        /* ─────────────────────────────────────
-           PAGE BASE
-        ───────────────────────────────────── */
+        /* ─── BASE ─────────────────────────────── */
         body {
             font-family: 'DM Sans', sans-serif;
             background: #F0F4F2;
         }
         .cont-main { padding-top: 80px; min-height: 100vh; }
 
-        /* ─────────────────────────────────────
-           HERO BANNER
-        ───────────────────────────────────── */
+        /* ─── HERO BANNER ──────────────────────── */
         .cv-hero {
             background: linear-gradient(135deg, #059669 0%, #10B981 60%, #0077b6 100%);
             padding: calc(80px + 2.2rem) 5% 3.8rem;
@@ -48,9 +44,10 @@
             pointer-events: none;
         }
         .cv-hero-inner {
-            position: relative;
             max-width: 1060px;
             margin: 0 auto;
+            position: relative;
+            z-index: 1;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -91,8 +88,11 @@
         }
         .cv-hero-stats {
             display: flex;
-            gap: 1.5rem;
+            gap: 1rem;
             flex-shrink: 0;
+        }
+        .cv-hero-stat {
+            text-align: center;
         }
         .cv-hero-stat {
             background: rgba(255,255,255,0.15);
@@ -119,184 +119,233 @@
             display: block;
             margin-top: 3px;
         }
+        .cv-hero-divider {
+            display: none;
+        }
 
-        /* ─────────────────────────────────────
-           WRAPPER CENTRAL
-        ───────────────────────────────────── */
-        .cv-wrap {
+        /* ─── FILTROS ───────────────────────────── */
+        .cv-filters-bar {
+            background: #fff;
+            border-bottom: none;
+            position: sticky;
+            top: 70px;
+            z-index: 99;
+            margin-top: -1px;
+        }
+        .cv-filters-inner {
             max-width: 1060px;
             margin: 0 auto;
-            padding: 2rem 5% 4rem;
-        }
-
-        /* ─────────────────────────────────────
-           FILTROS EM PILL (abas de tipo)
-        ───────────────────────────────────── */
-        .cv-filtros-wrap {
+            padding: 0.75rem 5%;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-        }
-        .cv-type-tabs {
-            display: flex;
-            gap: 0.4rem;
-            background: #fff;
-            border-radius: 14px;
-            padding: 5px;
-            box-shadow: 0 1px 8px rgba(0,0,0,0.07);
-            border: 1px solid #E5E7EB;
+            gap: 0.5rem;
         }
         .cv-type-tab {
             display: inline-flex;
             align-items: center;
             gap: 7px;
-            padding: 7px 20px;
-            border-radius: 10px;
-            border: none;
-            background: transparent;
-            font-size: 0.84rem;
+            padding: 8px 20px;
+            border: 2px solid #E5E7EB;
+            background: #fff;
+            font-family: 'Sora', sans-serif;
+            font-size: 0.82rem;
             font-weight: 600;
             color: #6B7280;
             cursor: pointer;
             transition: all 0.18s;
+            white-space: nowrap;
+            border-radius: 999px;
         }
-        .cv-type-tab:hover { color: #059669; background: #F0FDF4; }
-        .cv-type-tab.ativo { background: #059669; color: #fff; box-shadow: 0 2px 10px rgba(5,150,105,0.3); }
-        .cv-type-tab.ativo.video  { background: linear-gradient(135deg, #047857, #059669); box-shadow: 0 2px 10px rgba(4,120,87,0.35); }
-        .cv-type-tab.ativo.artigo { background: linear-gradient(135deg, #065f46, #047857); box-shadow: 0 2px 10px rgba(6,95,70,0.35); }
-
-        .cv-filtros-info {
-            font-size: 0.8rem;
-            color: #9CA3AF;
-            display: flex;
-            align-items: center;
-            gap: 5px;
+        .cv-type-tab:hover { border-color: #059669; color: #059669; background: #F0FDF4; }
+        .cv-type-tab.ativo { background: #059669; border-color: #059669; color: #fff; box-shadow: 0 2px 10px rgba(5,150,105,0.28); }
+        .cv-type-tab.ativo.video  { background: #059669; border-color: #059669; color: #fff; box-shadow: 0 2px 10px rgba(5,150,105,0.28); }
+        .cv-type-tab.ativo.artigo { background: #059669; border-color: #059669; color: #fff; box-shadow: 0 2px 10px rgba(5,150,105,0.28); }
+        .cv-type-tab .tab-count {
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 1px 7px;
+            border-radius: 99px;
+            min-width: 18px;
+            text-align: center;
         }
-        .cv-filtros-info i { color: #059669; }
+        .cv-type-tab:not(.ativo) .tab-count { background: #F3F4F6; color: #6B7280; }
+        .cv-type-tab.ativo .tab-count { background: rgba(255,255,255,0.28); color: #fff; }
 
-        /* ─────────────────────────────────────
-           RÓTULO DE SEÇÃO
-        ───────────────────────────────────── */
-        .cv-secao {
+        /* ─── WRAPPER CONTEÚDO ─────────────────── */
+        .cv-wrap {
+            max-width: 1060px;
+            margin: 0 auto;
+            padding: 2.5rem 5% 5rem;
+        }
+
+        /* ─── LABEL DE SEÇÃO ───────────────────── */
+        .cv-secao-label {
             display: flex;
             align-items: center;
             gap: 10px;
-            font-size: 0.72rem;
+            font-family: 'Sora', sans-serif;
+            font-size: 0.65rem;
             font-weight: 700;
-            letter-spacing: 1.8px;
-            color: #6B7280;
+            letter-spacing: 2px;
             text-transform: uppercase;
-            margin-bottom: 1rem;
+            color: #9CA3AF;
+            margin-bottom: 1.2rem;
         }
-        .cv-secao::after {
+        .cv-secao-label::after {
             content: '';
             flex: 1;
             height: 1px;
             background: #E5E7EB;
         }
 
-        /* ─────────────────────────────────────
-           CARD DESTAQUE (horizontal)
-        ───────────────────────────────────── */
+        /* ─── CARD DESTAQUE ────────────────────── */
         .cv-destaque {
             display: grid;
-            grid-template-columns: 300px 1fr;
+            grid-template-columns: 360px 1fr;
             border-radius: 20px;
             overflow: hidden;
             background: #fff;
-            border: 1px solid #E5E7EB;
-            box-shadow: 0 4px 24px rgba(5,150,105,0.10);
+            box-shadow: 0 4px 24px rgba(0,0,0,0.07), 0 1px 3px rgba(0,0,0,0.05);
             margin-bottom: 2.5rem;
-            transition: box-shadow 0.2s, transform 0.2s;
-            position: relative;
-        }
-        .cv-destaque::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0;
-            width: 4px;
-            height: 100%;
-            background: linear-gradient(180deg, #059669, #10b981);
-            z-index: 1;
+            transition: box-shadow 0.25s, transform 0.25s;
+            cursor: pointer;
         }
         .cv-destaque:hover {
-            box-shadow: 0 10px 36px rgba(5,150,105,0.16);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.12);
             transform: translateY(-2px);
         }
+
         .cv-dest-thumb {
-            min-height: 220px;
+            position: relative;
+            min-height: 240px;
+            background-size: cover !important;
+            background-position: center !important;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #DCFCE7;
+        }
+        .cv-dest-thumb::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.1) 100%);
+        }
+        .cv-play-lg {
             position: relative;
-        }
-        .cv-dest-thumb .cv-play-lg {
-            width: 64px; height: 64px;
+            z-index: 2;
+            width: 68px;
+            height: 68px;
             border-radius: 50%;
-            background: #059669;
-            display: flex; align-items: center; justify-content: center;
-            color: #fff;
-            font-size: 1.4rem;
-            padding-left: 4px;
-            box-shadow: 0 6px 22px rgba(5,150,105,0.4);
-            transition: transform 0.2s;
-            cursor: pointer;
+            background: rgba(255,255,255,0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: #059669;
+            padding-left: 5px;
+            box-shadow: 0 6px 24px rgba(0,0,0,0.25);
+            transition: transform 0.2s, box-shadow 0.2s;
         }
-        .cv-dest-thumb:hover .cv-play-lg { transform: scale(1.12); }
-        .cv-dest-thumb .cv-icon-lg {
-            width: 64px; height: 64px;
+        .cv-destaque:hover .cv-play-lg {
+            transform: scale(1.1);
+            box-shadow: 0 10px 32px rgba(0,0,0,0.3);
+        }
+        .cv-icon-lg {
+            position: relative;
+            z-index: 2;
+            width: 68px;
+            height: 68px;
             border-radius: 50%;
-            background: rgba(5,150,105,0.12);
-            display: flex; align-items: center; justify-content: center;
+            background: rgba(255,255,255,0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 1.6rem;
             color: #059669;
+            box-shadow: 0 6px 24px rgba(0,0,0,0.15);
         }
+        /* categoria badge sobre a imagem */
+        .cv-dest-cat-badge {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            z-index: 3;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 12px;
+            border-radius: 99px;
+            background: rgba(0,0,0,0.55);
+            backdrop-filter: blur(8px);
+            font-family: 'Sora', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 0.5px;
+        }
+        .cv-dest-type-badge {
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            z-index: 3;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 12px;
+            border-radius: 99px;
+            font-family: 'Sora', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+        }
+        .cv-dest-type-badge.video { background: #059669; color: #fff; }
+        .cv-dest-type-badge.artigo { background: #047857; color: #fff; }
+
         .cv-dest-info {
             padding: 2rem 2.2rem;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            gap: 0.8rem;
+            gap: 1rem;
         }
-        .cv-dest-badges {
+        .cv-dest-top-row {
             display: flex;
             align-items: center;
             gap: 8px;
             flex-wrap: wrap;
         }
-        .cv-badge-assistido {
+        .cv-badge-destaque {
             display: inline-flex;
             align-items: center;
             gap: 5px;
-            font-size: 0.7rem;
+            font-family: 'Sora', sans-serif;
+            font-size: 0.62rem;
             font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
             color: #D97706;
-            background: #FEF3C7;
-            padding: 3px 10px;
-            border-radius: 999px;
         }
         .cv-badge-cat {
-            font-size: 0.68rem;
+            font-family: 'Sora', sans-serif;
+            font-size: 0.65rem;
             font-weight: 700;
             padding: 3px 10px;
-            border-radius: 999px;
+            border-radius: 5px;
             text-transform: uppercase;
-            letter-spacing: 0.4px;
+            letter-spacing: 0.3px;
         }
         .cv-dest-titulo {
-            font-size: clamp(1.15rem, 2.2vw, 1.5rem);
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(1.15rem, 2.2vw, 1.55rem);
             font-weight: 800;
-            color: #111827;
-            line-height: 1.3;
+            color: #0F172A;
+            line-height: 1.25;
+            letter-spacing: -0.3px;
         }
         .cv-dest-texto {
             color: #4B5563;
             font-size: 0.9rem;
-            line-height: 1.65;
+            line-height: 1.7;
             overflow: hidden;
             display: -webkit-box;
             -webkit-line-clamp: 3;
@@ -309,7 +358,8 @@
             justify-content: space-between;
             gap: 1rem;
             flex-wrap: wrap;
-            margin-top: 0.2rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid #F3F4F6;
         }
         .cv-dest-meta {
             display: flex;
@@ -318,192 +368,255 @@
             font-size: 0.78rem;
             color: #9CA3AF;
         }
-        .cv-dest-meta span { display: flex; align-items: center; gap: 4px; }
+        .cv-dest-meta span { display: flex; align-items: center; gap: 5px; }
         .cv-btn-assistir {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: linear-gradient(135deg, #059669, #10b981);
+            background: linear-gradient(135deg, #059669, #047857);
             color: #fff;
+            font-family: 'Sora', sans-serif;
             font-weight: 700;
-            font-size: 0.84rem;
+            font-size: 0.8rem;
             padding: 10px 24px;
-            border-radius: 999px;
+            border-radius: 10px;
             border: none;
             cursor: pointer;
             text-decoration: none;
             transition: all 0.2s;
-            box-shadow: 0 4px 14px rgba(5,150,105,0.28);
             white-space: nowrap;
+            letter-spacing: 0.2px;
+            box-shadow: 0 4px 12px rgba(5,150,105,0.35);
         }
         .cv-btn-assistir:hover {
             transform: translateY(-1px);
-            box-shadow: 0 6px 20px rgba(5,150,105,0.38);
+            box-shadow: 0 8px 20px rgba(5,150,105,0.4);
             color: #fff;
         }
+        .cv-btn-assistir.artigo {
+            background: linear-gradient(135deg, #1D4ED8, #1e40af);
+            box-shadow: 0 4px 12px rgba(29,78,216,0.35);
+        }
+        .cv-btn-assistir.artigo:hover { box-shadow: 0 8px 20px rgba(29,78,216,0.4); }
 
-        /* ─────────────────────────────────────
-           GRID PRINCIPAL (3 colunas)
-        ───────────────────────────────────── */
+        /* ─── GRID PRINCIPAL (3 col) ─────────────── */
         .cv-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 1.1rem;
-            margin-bottom: 1.5rem;
+            gap: 1.2rem;
+            margin-bottom: 1.2rem;
         }
+
         .cv-card {
             border-radius: 16px;
             overflow: hidden;
             background: #fff;
-            border: 1px solid #E5E7EB;
-            box-shadow: 0 2px 12px rgba(5,150,105,0.07);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             display: flex;
             flex-direction: column;
-            transition: transform 0.18s, box-shadow 0.18s;
-            position: relative;
+            transition: transform 0.22s, box-shadow 0.22s;
+            cursor: pointer;
         }
-        /* Acento colorido no topo — tudo na paleta EletroLight */
-        .cv-card.tbg-reciclagem   { border-top: 3px solid #059669; }
-        .cv-card.tbg-curiosidades { border-top: 3px solid #10b981; }
-        .cv-card.tbg-dicas        { border-top: 3px solid #047857; }
-        .cv-card.tbg-impacto      { border-top: 3px solid #064e3b; }
-        .cv-card.tbg-legislacao   { border-top: 3px solid #065f46; }
-        .cv-card.is-video         { border-top: 3px solid #059669; }
         .cv-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 10px 32px rgba(5,150,105,0.14);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.11);
         }
+
         .cv-card-thumb {
-            height: 128px;
+            height: 150px;
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
+            background-size: cover !important;
+            background-position: center !important;
         }
-        .cv-card-thumb .cv-play-sm {
-            width: 40px; height: 40px;
+        .cv-card-thumb::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,0.45) 100%);
+        }
+        /* Only apply gradient overlay for video thumbs */
+        .cv-card-thumb:not(.is-video)::after { display: none; }
+
+        .cv-play-sm {
+            position: relative;
+            z-index: 2;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
-            border: 2px solid rgba(255,255,255,0.75);
-            background: rgba(255,255,255,0.32);
-            display: flex; align-items: center; justify-content: center;
+            background: rgba(255,255,255,0.92);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 0.85rem;
+            color: #059669;
             padding-left: 3px;
-            transition: transform 0.18s;
-            backdrop-filter: blur(3px);
-            color: #fff;
+            text-decoration: none;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+            transition: transform 0.2s, box-shadow 0.2s;
         }
-        .cv-card:hover .cv-play-sm { transform: scale(1.14); }
-        .cv-card-thumb .cv-icon-sm {
-            width: 48px; height: 48px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.5);
-            display: flex; align-items: center; justify-content: center;
+        .cv-card:hover .cv-play-sm {
+            transform: scale(1.12);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.28);
+        }
+        .cv-icon-sm {
+            position: relative;
+            z-index: 2;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 1.1rem;
+            background: rgba(255,255,255,0.85);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
         }
+        .cv-card:hover .cv-icon-sm { transform: scale(1.08); }
+
+        /* tipo badge no canto superior */
+        .cv-card-type {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 3;
+            padding: 3px 9px;
+            border-radius: 99px;
+            font-family: 'Sora', sans-serif;
+            font-size: 0.58rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .cv-card-type.video { background: #059669; color: #fff; }
+        .cv-card-type.artigo { background: #047857; color: #fff; }
+
         .cv-card-body {
-            padding: 1rem 1.1rem 1.1rem;
+            padding: 1rem 1.1rem 1.15rem;
             display: flex;
             flex-direction: column;
             gap: 0.35rem;
             flex: 1;
         }
         .cv-card-cat {
-            font-size: 0.72rem;
-            font-weight: 700;
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 5px;
+            font-family: 'Sora', sans-serif;
+            font-size: 0.68rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         .cv-card-titulo {
+            font-family: 'Sora', sans-serif;
             font-size: 0.92rem;
             font-weight: 700;
-            color: #111827;
-            line-height: 1.38;
+            color: #0F172A;
+            line-height: 1.35;
             overflow: hidden;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             line-clamp: 2;
             -webkit-box-orient: vertical;
         }
+        .cv-card-excerpt {
+            font-size: 0.78rem;
+            color: #6B7280;
+            line-height: 1.55;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+            margin-top: 0.1rem;
+        }
         .cv-card-meta {
             display: flex;
             align-items: center;
-            gap: 5px;
-            font-size: 0.75rem;
+            gap: 8px;
+            font-size: 0.72rem;
             color: #9CA3AF;
-            margin-top: 0.3rem;
+            margin-top: 0.4rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid #F3F4F6;
         }
+        .cv-card-meta span { display: flex; align-items: center; gap: 4px; }
 
-        /* ─────────────────────────────────────
-           LINHA FINAL — CARDS HORIZONTAIS (2 col)
-        ───────────────────────────────────── */
+        /* ─── GRID HORIZONTAL (2 col) ────────────── */
         .cv-grid-h {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 1.1rem;
-            margin-bottom: 1.5rem;
+            gap: 1.2rem;
+            margin-bottom: 1.2rem;
         }
         .cv-card-h {
             border-radius: 16px;
             overflow: hidden;
             background: #fff;
-            border: 1px solid #E5E7EB;
-            box-shadow: 0 2px 12px rgba(5,150,105,0.07);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             display: flex;
-            align-items: center;
-            gap: 0;
-            transition: transform 0.18s, box-shadow 0.18s;
+            align-items: stretch;
+            transition: transform 0.22s, box-shadow 0.22s;
+            cursor: pointer;
         }
-        .cv-card-h.tbg-reciclagem   { border-left: 4px solid #059669; }
-        .cv-card-h.tbg-curiosidades { border-left: 4px solid #10b981; }
-        .cv-card-h.tbg-dicas        { border-left: 4px solid #047857; }
-        .cv-card-h.tbg-impacto      { border-left: 4px solid #064e3b; }
-        .cv-card-h.tbg-legislacao   { border-left: 4px solid #065f46; }
-        .cv-card-h.is-video         { border-left: 4px solid #059669; }
         .cv-card-h:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 28px rgba(5,150,105,0.13);
+            box-shadow: 0 10px 28px rgba(0,0,0,0.1);
         }
         .cv-card-h-thumb {
-            width: 96px;
-            min-height: 96px;
+            width: 110px;
+            min-height: 100px;
             flex-shrink: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            align-self: stretch;
+            position: relative;
+            background-size: cover !important;
+            background-position: center !important;
         }
+        .cv-card-h-thumb::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.2);
+        }
+        .cv-card-h-thumb:not(.is-video)::after { display: none; }
         .cv-card-h-thumb .cv-play-sm {
-            width: 32px; height: 32px;
-            border-radius: 50%;
-            border: 1.5px solid rgba(255,255,255,0.7);
-            background: rgba(255,255,255,0.35);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 0.72rem;
-            padding-left: 2px;
-            transition: transform 0.18s;
-            backdrop-filter: blur(2px);
-            color: #fff;
+            width: 34px;
+            height: 34px;
+            font-size: 0.7rem;
+            color: #059669;
         }
-        .cv-card-h:hover .cv-play-sm { transform: scale(1.1); }
         .cv-card-h-body {
-            padding: 0.9rem 1rem;
+            padding: 1rem 1.1rem;
             flex: 1;
             min-width: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 0.25rem;
         }
         .cv-card-h-cat {
-            font-size: 0.68rem;
-            font-weight: 700;
             display: flex;
             align-items: center;
-            gap: 4px;
-            margin-bottom: 0.2rem;
+            gap: 5px;
+            font-family: 'Sora', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         .cv-card-h-titulo {
-            font-size: 0.88rem;
+            font-family: 'Sora', sans-serif;
+            font-size: 0.87rem;
             font-weight: 700;
-            color: #111827;
-            line-height: 1.32;
+            color: #0F172A;
+            line-height: 1.3;
             overflow: hidden;
             display: -webkit-box;
             -webkit-line-clamp: 2;
@@ -513,100 +626,84 @@
         .cv-card-h-meta {
             display: flex;
             align-items: center;
-            gap: 5px;
-            font-size: 0.72rem;
+            gap: 6px;
+            font-size: 0.7rem;
             color: #9CA3AF;
-            margin-top: 0.35rem;
+            margin-top: 0.2rem;
         }
 
-        /* ─────────────────────────────────────
-           RODAPÉ DA LISTA
-        ───────────────────────────────────── */
+        /* ─── PAGINAÇÃO ──────────────────────────── */
         .cv-bottom {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding-top: 0.8rem;
+            padding-top: 1.5rem;
+            margin-top: 0.5rem;
+            border-top: 1px solid #E5E7EB;
         }
-        .cv-dots { display: flex; gap: 6px; }
+        .cv-dots { display: flex; gap: 5px; }
         .cv-dot {
-            width: 10px; height: 10px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
             background: #D1D5DB;
             cursor: pointer;
-            transition: background 0.2s, transform 0.2s;
             border: none;
+            transition: all 0.2s;
         }
-        .cv-dot.ativo { background: #059669; transform: scale(1.2); }
-        .cv-count { font-size: 0.78rem; color: #9CA3AF; }
+        .cv-dot.ativo {
+            background: #059669;
+            width: 22px;
+            border-radius: 4px;
+        }
+        .cv-count {
+            font-size: 0.78rem;
+            color: #9CA3AF;
+        }
 
-        /* ─────────────────────────────────────
-           VAZIO / LOADING
-        ───────────────────────────────────── */
+        /* ─── VAZIO / LOADING ─────────────────────── */
         .cv-vazio {
             grid-column: 1 / -1;
             text-align: center;
-            padding: 4rem 2rem;
+            padding: 5rem 2rem;
             color: #9CA3AF;
         }
-        .cv-vazio i { font-size: 2.5rem; display: block; margin-bottom: 0.9rem; color: #D1FAE5; }
+        .cv-vazio i { font-size: 2.5rem; display: block; margin-bottom: 1rem; }
+        .cv-vazio p { font-size: 0.95rem; }
 
-        /* ─────────────────────────────────────
-           CORES POR CATEGORIA
-        ───────────────────────────────────── */
-        .tbg-reciclagem   { background: linear-gradient(135deg, #DCFCE7, #A7F3D0); }
-        .tbg-curiosidades { background: linear-gradient(135deg, #D1FAE5, #6EE7B7); }
-        .tbg-dicas        { background: linear-gradient(135deg, #ECFDF5, #A7F3D0); }
-        .tbg-impacto      { background: linear-gradient(135deg, #D1FAE5, #059669 120%); }
-        .tbg-legislacao   { background: linear-gradient(135deg, #F0FDF4, #6EE7B7); }
-        .tbg-default      { background: linear-gradient(135deg, #F0FDF4, #D1FAE5); }
+        /* ─── CORES POR CATEGORIA ─────────────────── */
+        .tbg-reciclagem   { background: linear-gradient(135deg, #bbf7d0, #d1fae5); }
+        .tbg-curiosidades { background: linear-gradient(135deg, #fed7aa, #fde8cc); }
+        .tbg-dicas        { background: linear-gradient(135deg, #ddd6fe, #ede9fe); }
+        .tbg-impacto      { background: linear-gradient(135deg, #fecaca, #fee2e2); }
+        .tbg-legislacao   { background: linear-gradient(135deg, #bfdbfe, #dbeafe); }
+        .tbg-default      { background: linear-gradient(135deg, #e5e7eb, #f3f4f6); }
 
         .tc-reciclagem   { color: #059669; }
-        .tc-curiosidades { color: #047857; }
-        .tc-dicas        { color: #065f46; }
-        .tc-impacto      { color: #064e3b; }
-        .tc-legislacao   { color: #10b981; }
+        .tc-curiosidades { color: #C2410C; }
+        .tc-dicas        { color: #7C3AED; }
+        .tc-impacto      { color: #DC2626; }
+        .tc-legislacao   { color: #1D4ED8; }
         .tc-default      { color: #6B7280; }
 
-        .bg-reciclagem   { background: #D1FAE5; color: #059669; }
-        .bg-curiosidades { background: #A7F3D0; color: #047857; }
-        .bg-dicas        { background: #6EE7B7; color: #065f46; }
-        .bg-impacto      { background: #ECFDF5; color: #064e3b; }
-        .bg-legislacao   { background: #D1FAE5; color: #10b981; }
+        .bg-reciclagem   { background: #DCFCE7; color: #059669; }
+        .bg-curiosidades { background: #FFF7ED; color: #C2410C; }
+        .bg-dicas        { background: #EDE9FE; color: #7C3AED; }
+        .bg-impacto      { background: #FEE2E2; color: #DC2626; }
+        .bg-legislacao   { background: #DBEAFE; color: #1D4ED8; }
 
-        /* thumbnails de vídeo */
-        .is-video {
-            background-size: cover !important;
-            background-position: center !important;
-            background-color: #e5e7eb !important;
-            position: relative;
-        }
-        .is-video::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: rgba(0,0,0,0.28);
-            z-index: 0;
-        }
-        .is-video .cv-play-lg,
-        .is-video .cv-play-sm {
-            position: relative;
-            z-index: 1;
-        }
-        .is-video .cv-play-sm {
-            background: rgba(255,255,255,0.92) !important;
-            color: #059669 !important;
-            border-color: rgba(255,255,255,0.6) !important;
-        }
+        .cv-icon-sm.tc-reciclagem   { color: #059669; }
+        .cv-icon-sm.tc-curiosidades { color: #C2410C; }
+        .cv-icon-sm.tc-dicas        { color: #7C3AED; }
+        .cv-icon-sm.tc-impacto      { color: #DC2626; }
+        .cv-icon-sm.tc-legislacao   { color: #1D4ED8; }
 
-        /* ─────────────────────────────────────
-           MODAL DE ARTIGO
-        ───────────────────────────────────── */
+        /* ─── MODAL DE ARTIGO ─────────────────────── */
         .art-modal-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(15, 23, 42, 0.60);
-            backdrop-filter: blur(5px);
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(6px);
             z-index: 2000;
             display: flex;
             align-items: center;
@@ -616,95 +713,111 @@
             pointer-events: none;
             transition: opacity 0.25s ease;
         }
-        .art-modal-overlay.ativo { opacity: 1; pointer-events: auto; }
+        .art-modal-overlay.ativo {
+            opacity: 1;
+            pointer-events: auto;
+        }
         .art-modal {
             background: #fff;
             border-radius: 20px;
             width: 100%;
-            max-width: 720px;
-            max-height: 85vh;
+            max-width: 680px;
+            max-height: 88vh;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 24px 60px rgba(0,0,0,0.2);
-            transform: translateY(16px);
-            transition: transform 0.25s ease;
+            box-shadow: 0 24px 60px rgba(0,0,0,0.22);
+            transform: translateY(16px) scale(0.98);
+            transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        .art-modal-overlay.ativo .art-modal { transform: translateY(0); }
+        .art-modal-overlay.ativo .art-modal {
+            transform: translateY(0) scale(1);
+        }
         .art-modal-header {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: space-between;
-            padding: 1.2rem 1.5rem;
-            border-bottom: 1px solid #E5E7EB;
-            background: linear-gradient(135deg, #F0FDF4, #fff);
-            border-radius: 20px 20px 0 0;
+            padding: 1.4rem 1.6rem 1.1rem;
+            border-bottom: 1px solid #F3F4F6;
+            gap: 1rem;
         }
         .art-modal-titulo {
+            font-family: 'Sora', sans-serif;
             font-size: 1.15rem;
-            font-weight: 700;
-            color: #111827;
+            font-weight: 800;
+            color: #0F172A;
             line-height: 1.3;
-            padding-right: 1rem;
         }
         .art-modal-fechar {
             background: #F3F4F6;
             border: none;
-            width: 36px; height: 36px;
+            width: 36px;
+            height: 36px;
             border-radius: 10px;
             cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: #6B7280;
-            transition: background 0.15s, color 0.15s;
             flex-shrink: 0;
+            transition: background 0.15s, color 0.15s;
         }
         .art-modal-fechar:hover { background: #E5E7EB; color: #111827; }
         .art-modal-body {
-            padding: 1.5rem;
+            padding: 1.4rem 1.6rem;
             overflow-y: auto;
             font-size: 0.97rem;
             line-height: 1.75;
             color: #374151;
         }
-        .art-modal-body p { margin-bottom: 0.9rem; }
+        .art-modal-body p { margin-bottom: 1rem; }
         .art-modal-footer {
             display: flex;
             gap: 0.6rem;
-            padding: 0.9rem 1.5rem 1.2rem;
-            border-top: 1px solid #E5E7EB;
+            padding: 1rem 1.6rem 1.2rem;
+            border-top: 1px solid #F3F4F6;
             justify-content: flex-end;
         }
         .art-modal-btn {
-            display: inline-flex; align-items: center; gap: 6px;
-            padding: 0.55rem 1.1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0.6rem 1.1rem;
             border-radius: 10px;
-            font-size: 0.85rem; font-weight: 600;
+            font-family: 'Sora', sans-serif;
+            font-size: 0.83rem;
+            font-weight: 700;
             cursor: pointer;
-            transition: background 0.15s, transform 0.1s;
+            transition: all 0.15s;
             border: none;
         }
-        .art-modal-btn:hover { transform: translateY(-1px); }
         .art-modal-btn.secundario { background: #F3F4F6; color: #374151; }
         .art-modal-btn.secundario:hover { background: #E5E7EB; }
-        .art-modal-btn.primario { background: linear-gradient(135deg, #059669, #10b981); color: #fff; box-shadow: 0 3px 12px rgba(5,150,105,0.25); }
-        .art-modal-btn.primario:hover { background: linear-gradient(135deg, #047857, #059669); }
+        .art-modal-btn.primario {
+            background: linear-gradient(135deg, #059669, #047857);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(5,150,105,0.3);
+        }
+        .art-modal-btn.primario:hover { box-shadow: 0 6px 18px rgba(5,150,105,0.4); transform: translateY(-1px); }
         .art-modal-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
-        /* ─────────────────────────────────────
-           RESPONSIVO
-        ───────────────────────────────────── */
+        /* ─── THUMBNAIL is-video ─────────────────── */
+        .is-video {
+            background-size: cover !important;
+            background-position: center !important;
+            background-color: #1e293b !important;
+        }
+
+        /* ─── RESPONSIVO ─────────────────────────── */
         @media (max-width: 860px) {
             .cv-grid { grid-template-columns: 1fr 1fr; }
-            .cv-hero-stats { gap: 0.8rem; }
-            .cv-hero-stat { padding: 0.7rem 0.9rem; min-width: 60px; }
+            .cv-destaque { grid-template-columns: 1fr; }
+            .cv-dest-thumb { min-height: 180px; }
         }
         @media (max-width: 640px) {
-            .cv-destaque { grid-template-columns: 1fr; }
-            .cv-dest-thumb { min-height: 140px; }
             .cv-grid { grid-template-columns: 1fr; }
             .cv-grid-h { grid-template-columns: 1fr; }
             .cv-hero-stats { display: none; }
-            .cv-hero { padding: 2rem 5% 2rem; }
-            .cv-filtros-wrap { flex-direction: column; align-items: flex-start; }
+            .cv-hero h1 { font-size: 1.7rem; }
         }
     </style>
 </head>
@@ -734,57 +847,70 @@
         </div>
     </header>
 
-    <main class="cont-main">
-
-        <!-- ── HERO BANNER ── -->
-        <div class="cv-hero">
-            <div class="cv-hero-inner">
-                <div>
-                    <div class="cv-hero-label"><i class="fa-solid fa-graduation-cap"></i> Canal Educativo</div>
-                    <h1>Conteúdos sobre <span>E-lixo</span><br>e Descarte Consciente</h1>
-                    <p class="cv-hero-sub">Aprenda sobre reciclagem, legislação e os impactos do lixo eletrônico em Manaus e no mundo.</p>
+    <!-- Hero Banner -->
+    <div class="cv-hero">
+        <div class="cv-hero-inner">
+            <div>
+                <div class="cv-hero-label"><i class="fa-solid fa-graduation-cap"></i> Canal Educativo</div>
+                <h1>Conteúdos sobre<br>E-lixo e Descarte</h1>
+                <p class="cv-hero-sub">Aprenda sobre reciclagem, legislação e os impactos do lixo eletrônico em Manaus e no mundo.</p>
+            </div>
+            <div class="cv-hero-stats">
+                <div class="cv-hero-stat">
+                    <strong id="stat-total">—</strong>
+                    <small>conteúdos</small>
                 </div>
-                <div class="cv-hero-stats">
-                    <div class="cv-hero-stat">
-                        <strong id="stat-total">—</strong>
-                        <small>conteúdos</small>
-                    </div>
-                    <div class="cv-hero-stat">
-                        <strong>5</strong>
-                        <small>temas</small>
-                    </div>
+                <div class="cv-hero-divider"></div>
+                <div class="cv-hero-stat">
+                    <strong>5</strong>
+                    <small>temas</small>
+                </div>
+                <div class="cv-hero-divider"></div>
+                <div class="cv-hero-stat">
+                    <strong id="stat-videos">—</strong>
+                    <small>vídeos</small>
                 </div>
             </div>
         </div>
+    </div>
 
+    <!-- Barra de Filtros -->
+    <div class="cv-filters-bar">
+        <div class="cv-filters-inner">
+            <button class="cv-type-tab ativo" data-tipo="todos">
+                <i class="fa-solid fa-border-all"></i> Todos
+                <span class="tab-count" id="count-todos">—</span>
+            </button>
+            <button class="cv-type-tab video" data-tipo="video">
+                <i class="fa-brands fa-youtube"></i> Vídeos
+                <span class="tab-count" id="count-video">—</span>
+            </button>
+            <button class="cv-type-tab artigo" data-tipo="artigo">
+                <i class="fa-solid fa-file-lines"></i> Artigos
+                <span class="tab-count" id="count-artigo">—</span>
+            </button>
+        </div>
+    </div>
+
+    <main class="cont-main" style="padding-top:0;">
         <div class="cv-wrap">
-
-            <!-- Filtros -->
-            <div class="cv-filtros-wrap">
-                <div class="cv-type-tabs">
-                    <button class="cv-type-tab ativo" data-tipo="todos"><i class="fa-solid fa-border-all"></i> Todos</button>
-                    <button class="cv-type-tab video" data-tipo="video"><i class="fa-brands fa-youtube"></i> Vídeos</button>
-                    <button class="cv-type-tab artigo" data-tipo="artigo"><i class="fa-solid fa-file-lines"></i> Artigos</button>
-                </div>
-                <span class="cv-filtros-info"><i class="fa-solid fa-circle-info"></i> Clique nos cards para ler os artigos</span>
-            </div>
 
             <!-- Destaque -->
             <div id="secao-destaque" style="display:none;">
-                <p class="cv-secao"><i class="fa-solid fa-star" style="color:#D97706;"></i> Destaque</p>
+                <p class="cv-secao-label"><i class="fa-solid fa-fire-flame-curved" style="color:#F59E0B;"></i> Destaque</p>
                 <div class="cv-destaque" id="destaque-card"></div>
             </div>
 
             <!-- Grade 3 colunas -->
             <div id="secao-grid" style="display:none;">
-                <p class="cv-secao"><i class="fa-solid fa-layer-group" style="color:#059669;"></i> Conteúdos e Curiosidades</p>
+                <p class="cv-secao-label"><i class="fa-solid fa-grid-2"></i> Conteúdos e Curiosidades</p>
                 <div class="cv-grid" id="cv-grid"></div>
             </div>
 
-            <!-- Linha horizontal (últimos itens ímpares) -->
+            <!-- Linha horizontal (últimos) -->
             <div class="cv-grid-h" id="cv-grid-h" style="display:none;"></div>
 
-            <!-- Rodapé com paginação e contagem -->
+            <!-- Rodapé paginação -->
             <div class="cv-bottom" id="cv-bottom" style="display:none;">
                 <div class="cv-dots" id="cv-dots"></div>
                 <span class="cv-count" id="cv-count"></span>
@@ -823,7 +949,6 @@
     <footer>
         <p><i class="fa-solid fa-bolt"></i> Projeto EletroLight &copy; 2026</p>
         <p style="font-size: 0.9rem; opacity: 0.7; margin-top: 5px;">Solução Digital para Consumo Consciente e Mitigação de E-Lixo.</p>
-        <p style="font-size: 0.85rem; opacity: 0.6; margin-top: 3px;">Contato: eletrolightsuporte@gmail.com</p>
     </footer>
 
     <script src="../scripts/api-service.js"></script>
@@ -923,9 +1048,7 @@
         document.getElementById('art-modal-overlay').addEventListener('click', e => {
             if (e.target === document.getElementById('art-modal-overlay')) fecharModalArtigo();
         });
-        document.addEventListener('keydown', e => {
-            if (e.key === 'Escape') fecharModalArtigo();
-        });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') fecharModalArtigo(); });
 
         /* ─── Render Destaque ─── */
         function renderDestaque(c) {
@@ -933,72 +1056,97 @@
             const temVideo = !!c.link_video;
             const rt = readTime(c.texto);
             const th = thumbStyle(c.link_video, cat, c.imagem);
+            const clickArtigo = !temVideo ? `onclick="abrirModalArtigo(${JSON.stringify(c).replace(/"/g, '&quot;')})"` : '';
 
-            const clickArtigo = !temVideo ? `onclick="abrirModalArtigo(${JSON.stringify(c).replace(/"/g, '&quot;')})" style="cursor:pointer;"` : '';
             document.getElementById('secao-destaque').style.display = '';
+            document.getElementById('destaque-card').setAttribute('onclick', !temVideo ? `abrirModalArtigo(${JSON.stringify(c).replace(/"/g, '&quot;')})` : `window.open('${c.link_video}','_blank')`);
+
             document.getElementById('destaque-card').innerHTML = `
-                <div class="cv-dest-thumb ${th.cls}" style="${th.style}${temVideo ? 'cursor:pointer;' : ''}" ${temVideo ? `onclick="window.open('${c.link_video}','_blank')"` : ''}>
+                <div class="cv-dest-thumb ${th.cls}" style="${th.style}">
+                    <span class="cv-dest-cat-badge"><i class="fa-solid ${cat.icon}"></i> ${cat.label}</span>
                     ${temVideo
                         ? `<div class="cv-play-lg"><i class="fa-solid fa-play"></i></div>`
                         : c.imagem ? '' : `<div class="cv-icon-lg"><i class="fa-solid ${cat.icon}"></i></div>`}
+                    <span class="cv-dest-type-badge ${temVideo ? 'video' : 'artigo'}">
+                        <i class="fa-solid ${temVideo ? 'fa-play' : 'fa-file-lines'}"></i>
+                        ${temVideo ? 'Vídeo' : 'Artigo'}
+                    </span>
                 </div>
-                <div class="cv-dest-info" ${clickArtigo}>
-                    <div class="cv-dest-badges">
-                        <span class="cv-badge-assistido"><i class="fa-solid fa-star"></i> MAIS ACESSADO</span>
+                <div class="cv-dest-info">
+                    <div class="cv-dest-top-row">
+                        <span class="cv-badge-destaque"><i class="fa-solid fa-fire-flame-curved"></i> MAIS ACESSADO</span>
                         <span class="cv-badge-cat ${cat.bg}">${cat.label}</span>
                     </div>
                     <div class="cv-dest-titulo">${c.titulo}</div>
                     <div class="cv-dest-texto">${c.texto}</div>
                     <div class="cv-dest-footer">
                         <div class="cv-dest-meta">
-                            <span><i class="fa-regular fa-clock"></i> ${rt} min</span>
+                            <span><i class="fa-regular fa-clock"></i> ${rt} min de leitura</span>
                             <span><i class="fa-regular fa-eye"></i> ${temVideo ? 'Vídeo disponível' : 'Artigo'}</span>
                         </div>
                         ${temVideo
-                            ? `<a href="${c.link_video}" target="_blank" rel="noopener" class="cv-btn-assistir">
-                                <i class="fa-solid fa-play"></i> Assistir
+                            ? `<a href="${c.link_video}" target="_blank" rel="noopener" class="cv-btn-assistir" onclick="event.stopPropagation()">
+                                <i class="fa-solid fa-play"></i> Assistir agora
                                </a>`
-                            : `<span class="cv-btn-assistir" style="background:linear-gradient(135deg,#047857,#059669);"><i class="fa-solid fa-file-lines"></i> Ler artigo</span>`}
+                            : `<span class="cv-btn-assistir artigo"><i class="fa-solid fa-file-lines"></i> Ler artigo</span>`}
                     </div>
                 </div>`;
         }
 
-        /* ─── Render Card (grade 3-col) ─── */
+        /* ─── Render Card (3-col) ─── */
         function renderCard(c) {
             const cat = getCat(c.categoria);
             const temVideo = !!c.link_video;
             const rt = readTime(c.texto);
             const th = thumbStyle(c.link_video, cat, c.imagem);
+            const excerpt = (c.texto || '').slice(0, 90) + (c.texto && c.texto.length > 90 ? '…' : '');
+
             const thumbContent = temVideo
-                ? `<a href="${c.link_video}" target="_blank" rel="noopener" class="cv-play-sm" title="Assistir"><i class="fa-solid fa-play"></i></a>`
+                ? `<a href="${c.link_video}" target="_blank" rel="noopener" class="cv-play-sm" title="Assistir" onclick="event.stopPropagation()"><i class="fa-solid fa-play"></i></a>`
                 : c.imagem ? '' : `<div class="cv-icon-sm ${cat.tc}"><i class="fa-solid ${cat.icon}"></i></div>`;
-            const clickHandler = !temVideo ? `onclick="abrirModalArtigo(${JSON.stringify(c).replace(/"/g, '&quot;')})" style="cursor:pointer;"` : '';
-            return `<div class="cv-card ${th.cls}" ${clickHandler}>
-                <div class="cv-card-thumb ${th.cls}" style="${th.style}">${thumbContent}</div>
+
+            const typeClass = temVideo ? 'video' : 'artigo';
+            const typeLabel = temVideo ? 'Vídeo' : 'Artigo';
+
+            const clickAttr = !temVideo ? `onclick="abrirModalArtigo(${JSON.stringify(c).replace(/"/g, '&quot;')})"` : `onclick="window.open('${c.link_video}','_blank')"`;
+
+            return `<div class="cv-card" ${clickAttr}>
+                <div class="cv-card-thumb ${th.cls}" style="${th.style}">
+                    <span class="cv-card-type ${typeClass}">${typeLabel}</span>
+                    ${thumbContent}
+                </div>
                 <div class="cv-card-body">
                     <div class="cv-card-cat ${cat.tc}"><i class="fa-solid ${cat.icon}"></i> ${cat.label}</div>
                     <div class="cv-card-titulo">${c.titulo}</div>
-                    <div class="cv-card-meta"><i class="fa-regular fa-clock"></i> ${rt} min</div>
+                    ${excerpt ? `<div class="cv-card-excerpt">${excerpt}</div>` : ''}
+                    <div class="cv-card-meta">
+                        <span><i class="fa-regular fa-clock"></i> ${rt} min</span>
+                        <span>·</span>
+                        <span><i class="fa-solid ${temVideo ? 'fa-play' : 'fa-file-lines'}"></i> ${temVideo ? 'Assistir' : 'Ler'}</span>
+                    </div>
                 </div>
             </div>`;
         }
 
-        /* ─── Render Card horizontal (2-col) ─── */
+        /* ─── Render Card Horizontal (2-col) ─── */
         function renderCardH(c) {
             const cat = getCat(c.categoria);
             const temVideo = !!c.link_video;
             const rt = readTime(c.texto);
             const th = thumbStyle(c.link_video, cat, c.imagem);
+
             const thumbContent = temVideo
-                ? `<a href="${c.link_video}" target="_blank" rel="noopener" class="cv-play-sm" title="Assistir"><i class="fa-solid fa-play"></i></a>`
+                ? `<a href="${c.link_video}" target="_blank" rel="noopener" class="cv-play-sm" title="Assistir" onclick="event.stopPropagation()"><i class="fa-solid fa-play"></i></a>`
                 : c.imagem ? '' : `<div class="cv-icon-sm ${cat.tc}"><i class="fa-solid ${cat.icon}"></i></div>`;
-            const clickHandlerH = !temVideo ? `onclick="abrirModalArtigo(${JSON.stringify(c).replace(/"/g, '&quot;')})" style="cursor:pointer;"` : '';
-            return `<div class="cv-card-h ${th.cls}" ${clickHandlerH}>
+
+            const clickAttr = !temVideo ? `onclick="abrirModalArtigo(${JSON.stringify(c).replace(/"/g, '&quot;')})"` : `onclick="window.open('${c.link_video}','_blank')"`;
+
+            return `<div class="cv-card-h" ${clickAttr}>
                 <div class="cv-card-h-thumb ${th.cls}" style="${th.style}">${thumbContent}</div>
                 <div class="cv-card-h-body">
                     <div class="cv-card-h-cat ${cat.tc}"><i class="fa-solid ${cat.icon}"></i> ${cat.label}</div>
                     <div class="cv-card-h-titulo">${c.titulo}</div>
-                    <div class="cv-card-h-meta"><i class="fa-regular fa-clock"></i> ${rt} min</div>
+                    <div class="cv-card-h-meta"><i class="fa-regular fa-clock"></i> ${rt} min · ${temVideo ? 'Vídeo' : 'Artigo'}</div>
                 </div>
             </div>`;
         }
@@ -1036,8 +1184,8 @@
             const gridItems = items.slice(0, Math.floor(items.length / 3) * 3 || items.length - (items.length % 2));
             const hItems    = items.length % 3 !== 0 ? items.slice(-(items.length % 3)) : [];
 
-            const gridEl = document.getElementById('cv-grid');
-            const hEl    = document.getElementById('cv-grid-h');
+            const gridEl  = document.getElementById('cv-grid');
+            const hEl     = document.getElementById('cv-grid-h');
             const secGrid = document.getElementById('secao-grid');
 
             if (items.length) {
@@ -1054,9 +1202,9 @@
                 hEl.style.display = 'none';
             }
 
-            const bottom   = document.getElementById('cv-bottom');
-            const dotsEl   = document.getElementById('cv-dots');
-            const countEl  = document.getElementById('cv-count');
+            const bottom  = document.getElementById('cv-bottom');
+            const dotsEl  = document.getElementById('cv-dots');
+            const countEl = document.getElementById('cv-count');
             if (lista.length && totalPags > 1) {
                 bottom.style.display = '';
                 dotsEl.innerHTML = Array.from({ length: totalPags }, (_, i) =>
@@ -1109,7 +1257,15 @@
             try {
                 const lista = await window.SupabaseService.getConteudoEducativo();
                 todosConteudos = (lista || []).filter(c => c.ativo);
-                document.getElementById('stat-total').textContent = todosConteudos.length;
+                const nVideos   = todosConteudos.filter(c => !!c.link_video).length;
+                const nArtigos  = todosConteudos.filter(c => !c.link_video).length;
+
+                document.getElementById('stat-total').textContent  = todosConteudos.length;
+                document.getElementById('stat-videos').textContent = nVideos;
+                document.getElementById('count-todos').textContent  = todosConteudos.length;
+                document.getElementById('count-video').textContent  = nVideos;
+                document.getElementById('count-artigo').textContent = nArtigos;
+
                 if (!todosConteudos.length) {
                     document.getElementById('cv-loading').innerHTML = `<div class="cv-vazio">
                         <i class="fa-solid fa-inbox"></i>
