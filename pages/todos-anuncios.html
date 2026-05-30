@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=person" />
     <link rel="stylesheet" href="../styles/style.css">
+    <link rel="stylesheet" href="../styles/dark-mode.css">
     <style>
         .todos-main { padding-top: 80px; }
 
@@ -32,7 +33,7 @@
             bottom: -2px;
             left: 0; right: 0;
             height: 60px;
-            background: #fff;
+            background: var(--white, #fff);
             clip-path: ellipse(52% 100% at 50% 100%);
             pointer-events: none;
         }
@@ -65,7 +66,7 @@
         }
 
         .todos-controles {
-            background: #fff;
+            background: var(--white, #fff);
             border-bottom: 1px solid #e5e7eb;
             padding: 1.2rem 5%;
             display: flex;
@@ -78,7 +79,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            background: #F9FAFB;
+            background: var(--bg, #F9FAFB);
             border: 2px solid #e5e7eb;
             border-radius: 999px;
             padding: 8px 16px;
@@ -86,14 +87,14 @@
             min-width: 200px;
             max-width: 360px;
         }
-        .busca-input-wrap i { color: #9CA3AF; }
+        .busca-input-wrap i { color: var(--text-faint, #9CA3AF); }
         .busca-input-wrap input {
             border: none;
             background: transparent;
             outline: none;
             font-size: 0.95rem;
             width: 100%;
-            color: #1F2937;
+            color: var(--text, #1F2937);
         }
 
         .todos-corpo {
@@ -112,7 +113,7 @@
         }
         .total-anuncios {
             font-size: 0.95rem;
-            color: #6B7280;
+            color: var(--muted, #6B7280);
         }
         .total-anuncios strong { color: #059669; }
 
@@ -138,11 +139,11 @@
             grid-column: 1 / -1;
             text-align: center;
             padding: 4rem 1rem;
-            color: #6B7280;
+            color: var(--muted, #6B7280);
         }
         .sem-resultados i {
             font-size: 3rem;
-            color: #D1FAE5;
+            color: var(--icon-pale, #D1FAE5);
             display: block;
             margin-bottom: 1rem;
         }
@@ -154,6 +155,83 @@
         }
     </style>
     <style>body { min-height: 100vh; display: flex; flex-direction: column; } .todos-main { flex: 1; }</style>
+
+<script>
+(function () {
+    var STORAGE_KEY = 'eletrolight-theme';
+    var html = document.documentElement;
+    var savedTheme = localStorage.getItem(STORAGE_KEY);
+    if (savedTheme === 'dark') { html.setAttribute('data-theme', 'dark'); }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var btn = document.getElementById('theme-toggle');
+        if (!btn) return;
+        function updateToggle(theme) {
+            var icon = btn.querySelector('.toggle-icon');
+            var label = btn.querySelector('.toggle-label');
+            if (theme === 'dark') {
+                if (icon) icon.textContent = '☀️';
+                if (label) label.textContent = 'Light';
+            } else {
+                if (icon) icon.textContent = '🌙';
+                if (label) label.textContent = 'Dark';
+            }
+        }
+        updateToggle(html.getAttribute('data-theme') || 'light');
+        btn.addEventListener('click', function () {
+            var current = html.getAttribute('data-theme');
+            var next = current === 'dark' ? 'light' : 'dark';
+            if (next === 'dark') { html.setAttribute('data-theme', 'dark'); }
+            else { html.removeAttribute('data-theme'); }
+            localStorage.setItem(STORAGE_KEY, next);
+            updateToggle(next);
+        });
+    });
+})();
+</script>
+
+<script>
+// Sync local CSS vars with dark mode
+(function syncDarkVars() {
+    var STORAGE_KEY = 'eletrolight-theme';
+    function applyDarkVars(isDark) {
+        var r = document.documentElement;
+        if (isDark) {
+            r.style.setProperty('--white', '#162032');
+            r.style.setProperty('--bg', '#0d1b2a');
+            r.style.setProperty('--bg-light', '#111c2d');
+            r.style.setProperty('--border', '#243452');
+            r.style.setProperty('--text', '#e2e8f0');
+            r.style.setProperty('--muted', '#94a3b8');
+            r.style.setProperty('--card-bg', '#162032');
+            r.style.setProperty('--text-mid', '#94a3b8');
+            r.style.setProperty('--text-faint', '#64748b');
+            r.style.setProperty('--green-tint', 'rgba(16,185,129,0.10)');
+            r.style.setProperty('--green-border-c', 'rgba(16,185,129,0.25)');
+            r.style.setProperty('--red-tint', 'rgba(220,38,38,0.10)');
+            r.style.setProperty('--icon-pale', '#10b981');
+            r.style.setProperty('--title-color', '#e2e8f0');
+        } else {
+            ['--white','--bg','--bg-light','--border','--text','--muted',
+             '--card-bg','--text-mid','--text-faint','--green-tint',
+             '--green-border-c','--red-tint','--icon-pale','--title-color'].forEach(function(v) {
+                r.style.removeProperty(v);
+            });
+        }
+    }
+    var saved = localStorage.getItem(STORAGE_KEY);
+    if (saved === 'dark') applyDarkVars(true);
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var btn = document.getElementById('theme-toggle');
+        if (!btn) return;
+        btn.addEventListener('click', function() {
+            var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            applyDarkVars(isDark);
+        });
+    });
+})();
+</script>
 </head>
 <body>
 
