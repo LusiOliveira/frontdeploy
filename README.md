@@ -2,6 +2,22 @@
 
 Plataforma web completa para **doação e troca de eletrônicos usados**, conectando a comunidade de Manaus com pontos de coleta e promovendo a economia circular para reduzir o lixo eletrônico.
 
+📹 **Demo Video Apresentação do EletroLight**: https://youtu.be/9zj8JJ5CvPA
+
+### 👥 Equipe do Projeto
+
+**Participantes:**
+- **Calebe Uchoa** — github: devcalebe5@gmail.com
+- **Lusivaro Oliveira** — github: lusivaroufam@gmail.com
+- **Marselle Santos** — github: marselleos.27@gmail.com
+- **Rebeca Macedo** — github: becaloey@gmail.com
+- **Ruan Reymond** — github: reymondruan4@gmail.com
+
+**Docente:**
+- **Luana Leal** — prof.luanalealm@gmail.com
+
+---
+
 > **Backend**: Java 21 + Spring Boot (REST API) — deployado no Railway  
 > **Banco de Dados**: PostgreSQL (via Spring Data JPA / Hibernate)  
 > **Autenticação**: Custom (email/CPF) com Spring Security  
@@ -568,7 +584,21 @@ const API_BASE = 'https://ttc-backend-deploy-production.up.railway.app';
 
 ---
 
-## 📄 Licença
+## � Equipe do Projeto
+
+### Participantes
+- **Calebe Uchoa** — github: devcalebe5@gmail.com
+- **Lusivaro Oliveira** — github: lusivaroufam@gmail.com
+- **Marselle Santos** — github: marselleos.27@gmail.com
+- **Rebeca Macedo** — github: becaloey@gmail.com
+- **Ruan Reymond** — github: reymondruan4@gmail.com
+
+### Docente
+- **Luana Leal** — prof.luanalealm@gmail.com
+
+---
+
+## �� Licença
 
 Projeto acadêmico (TCC). Uso educacional.
 Imagens de terceiros sujeitas às licenças dos respectivos provedores.
