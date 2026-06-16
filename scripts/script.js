@@ -296,7 +296,7 @@ async function renderizarHomeAnuncios(catsAtivas) {
         anunciosGrid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#6B7280;padding:2rem;">Nenhum anúncio nesta categoria ainda.</p>';
         return;
     }
-    const session = sessionStorage.getItem('eletrolight_session');
+    const session = localStorage.getItem('eletrolight_session');
     const emailLogado = session ? JSON.parse(session).email.toLowerCase() : '';
     anunciosGrid.innerHTML = exibir.map(a => renderAnuncioCard(a, { isOwner: emailLogado && a.email && a.email.toLowerCase() === emailLogado })).join('');
 }
@@ -354,7 +354,7 @@ if (anunciosGrid) {
 const btnAnunciar = document.querySelector('.btn-anunciar');
 if (btnAnunciar) {
     btnAnunciar.addEventListener('click', (e) => {
-        if (!sessionStorage.getItem('eletrolight_session')) {
+        if (!localStorage.getItem('eletrolight_session')) {
             e.preventDefault();
             window.location.href = './login/login.html?cadastro=1';
         }
@@ -369,7 +369,7 @@ if (btnAnunciar) {
         return;
     }
 
-    const stored = sessionStorage.getItem('eletrolight_session');
+    const stored = localStorage.getItem('eletrolight_session');
     console.log('Sessão no script.js:', stored);
     if (!stored) {
         console.log('Usuário não logado - mantendo botão Cadastre-se');
@@ -418,7 +418,7 @@ if (btnAnunciar) {
 
     // Botão Sair: remove sessão e recarrega
     document.getElementById('btn-sair').addEventListener('click', () => {
-        sessionStorage.removeItem('eletrolight_session');
+        localStorage.removeItem('eletrolight_session');
         window.location.reload();
     });
 })();

@@ -664,7 +664,7 @@
         // ---- Header: perfil dropdown ----
         (function () {
             const wrap   = document.getElementById('header-user-wrap');
-            const stored = sessionStorage.getItem('eletrolight_session');
+            const stored = localStorage.getItem('eletrolight_session');
             if (!wrap || !stored) return;
             const session      = JSON.parse(stored);
             const primeiroNome = session.nome.split(' ')[0];
@@ -700,7 +700,7 @@
                 if (dd) dd.classList.remove('aberto');
             });
             document.getElementById('btn-sair').addEventListener('click', () => {
-                sessionStorage.removeItem('eletrolight_session');
+                localStorage.removeItem('eletrolight_session');
                 window.location.reload();
             });
         })();
@@ -747,7 +747,7 @@
         (async function init() {
             const params    = new URLSearchParams(window.location.search);
             const anuncioId = params.get('id');
-            const session   = JSON.parse(sessionStorage.getItem('eletrolight_session') || 'null');
+            const session   = JSON.parse(localStorage.getItem('eletrolight_session') || 'null');
 
             if (!anuncioId) {
                 window.location.href = 'todos-anuncios.html';

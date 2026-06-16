@@ -6,7 +6,7 @@ const supabaseInstance = window.supabaseClient;
 
 // Helper para adicionar header com email do usuário logado (para RLS)
 function getAuthHeaders() {
-    const session = sessionStorage.getItem('eletrolight_session');
+    const session = localStorage.getItem('eletrolight_session');
     if (session) {
         const user = JSON.parse(session);
         return {
@@ -122,7 +122,7 @@ async function updateUser(userId, updates) {
 // ============================================
 
 function setSession(user) {
-    sessionStorage.setItem('eletrolight_session', JSON.stringify({
+    localStorage.setItem('eletrolight_session', JSON.stringify({
         nome: user.nome,
         email: user.email,
         is_admin: user.is_admin || false
@@ -130,12 +130,12 @@ function setSession(user) {
 }
 
 function getSession() {
-    const stored = sessionStorage.getItem('eletrolight_session');
+    const stored = localStorage.getItem('eletrolight_session');
     return stored ? JSON.parse(stored) : null;
 }
 
 function clearSession() {
-    sessionStorage.removeItem('eletrolight_session');
+    localStorage.removeItem('eletrolight_session');
 }
 
 // ============================================

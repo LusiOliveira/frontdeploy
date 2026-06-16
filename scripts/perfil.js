@@ -5,7 +5,7 @@
 const USERS_KEY = 'eletrolight_users';
 
 // --- Guarda: redireciona para login se não logado ---
-const sessionStored = sessionStorage.getItem('eletrolight_session');
+const sessionStored = localStorage.getItem('eletrolight_session');
 if (!sessionStored) {
     window.location.href = '../login/login.html';
 }

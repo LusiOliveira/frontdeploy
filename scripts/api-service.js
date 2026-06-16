@@ -99,11 +99,11 @@ async function updateUser(userId, updates) {
 }
 
 // ============================================
-// SESSÃO (local — sessionStorage)
+// SESSÃO (local — localStorage)
 // ============================================
 
 function setSession(user) {
-    sessionStorage.setItem('eletrolight_session', JSON.stringify({
+    localStorage.setItem('eletrolight_session', JSON.stringify({
         id: user.id || null,
         nome: user.nome,
         email: user.email,
@@ -112,12 +112,12 @@ function setSession(user) {
 }
 
 function getSession() {
-    const stored = sessionStorage.getItem('eletrolight_session');
+    const stored = localStorage.getItem('eletrolight_session');
     return stored ? JSON.parse(stored) : null;
 }
 
 function clearSession() {
-    sessionStorage.removeItem('eletrolight_session');
+    localStorage.removeItem('eletrolight_session');
 }
 
 // ============================================

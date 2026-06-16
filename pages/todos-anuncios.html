@@ -235,7 +235,7 @@
         // --- Perfil no header ---
         (function () {
             const wrap   = document.getElementById('header-user-wrap');
-            const stored = sessionStorage.getItem('eletrolight_session');
+            const stored = localStorage.getItem('eletrolight_session');
             if (!wrap || !stored) return;
             const session      = JSON.parse(stored);
             const primeiroNome = session.nome.split(' ')[0];
@@ -271,7 +271,7 @@
                 if (dd) dd.classList.remove('aberto');
             });
             document.getElementById('btn-sair').addEventListener('click', () => {
-                sessionStorage.removeItem('eletrolight_session');
+                localStorage.removeItem('eletrolight_session');
                 window.location.reload();
             });
         })();
@@ -303,7 +303,7 @@
                     </div>`;
                 return;
             }
-            const emailLogado = (function(){ try { return JSON.parse(sessionStorage.getItem('eletrolight_session')).email.toLowerCase(); } catch(e){ return ''; } })();
+            const emailLogado = (function(){ try { return JSON.parse(localStorage.getItem('eletrolight_session')).email.toLowerCase(); } catch(e){ return ''; } })();
             grid.innerHTML = filtrados.map(a => renderAnuncioCard(a, { isOwner: emailLogado && a.email && a.email.toLowerCase() === emailLogado })).join('');
         }
 
@@ -363,7 +363,7 @@
         const btnAnunciarTop = document.querySelector('.btn-anunciar-top');
         if (btnAnunciarTop) {
             btnAnunciarTop.addEventListener('click', (e) => {
-                if (!sessionStorage.getItem('eletrolight_session')) {
+                if (!localStorage.getItem('eletrolight_session')) {
                     e.preventDefault();
                     window.location.href = '../login/login.html?cadastro=1';
                 }

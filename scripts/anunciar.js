@@ -1,6 +1,6 @@
 // --- GUARDA DE LOGIN ---
 (function verificarLogin() {
-    const user = sessionStorage.getItem('eletrolight_session');
+    const user = localStorage.getItem('eletrolight_session');
     if (!user) {
         window.location.href = '../login/login.html?cadastro=1';
     }
@@ -133,7 +133,7 @@ if (form) {
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        const _sessao = JSON.parse(sessionStorage.getItem('eletrolight_session') || 'null');
+        const _sessao = JSON.parse(localStorage.getItem('eletrolight_session') || 'null');
         if (_sessao && window.SupabaseService) {
             try {
                 const _usr = await window.SupabaseService.findUserByEmail(_sessao.email);
@@ -192,7 +192,7 @@ if (form) {
             return;
         }
 
-        const userData = sessionStorage.getItem('eletrolight_session');
+        const userData = localStorage.getItem('eletrolight_session');
         const parsedUser = userData ? JSON.parse(userData) : null;
         const novoAnuncio = {
             titulo:    document.getElementById('titulo-anuncio').value.trim(),

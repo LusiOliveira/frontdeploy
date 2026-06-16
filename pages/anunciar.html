@@ -293,7 +293,7 @@
         // --- Perfil no header ---
         (function () {
             const wrap   = document.getElementById('header-user-wrap');
-            const stored = sessionStorage.getItem('eletrolight_session');
+            const stored = localStorage.getItem('eletrolight_session');
             if (!wrap || !stored) return;
             const session      = JSON.parse(stored);
             const primeiroNome = session.nome.split(' ')[0];
@@ -329,7 +329,7 @@
                 if (dd) dd.classList.remove('aberto');
             });
             document.getElementById('btn-sair').addEventListener('click', () => {
-                sessionStorage.removeItem('eletrolight_session');
+                localStorage.removeItem('eletrolight_session');
                 window.location.href = '../index.html';
             });
         })();

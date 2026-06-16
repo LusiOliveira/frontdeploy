@@ -349,7 +349,7 @@ async function validarLogin() {
             email: user.email,
             is_admin: user.isAdmin === true
         });
-        console.log('Sessão salva:', sessionStorage.getItem('eletrolight_session'));
+        console.log('Sessão salva:', localStorage.getItem('eletrolight_session'));
         mostrarToast('Login efetuado! Redirecionando...', 'sucesso');
         setTimeout(() => { window.location.href = '../index.html'; }, 1200);
 
