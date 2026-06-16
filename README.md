@@ -560,7 +560,40 @@ Configure as variáveis de ambiente no `application.properties` ou via `.env`:
 
 ---
 
-## 📝 Notas para Desenvolvedores
+## � Conformidade com LGPD
+
+O EletroLight está em conformidade com a Lei Geral de Proteção de Dados (LGPD - Lei nº 13.709/2018), garantindo a privacidade e segurança das informações pessoais dos usuários.
+
+### Princípios de Proteção de Dados
+- **Finalidade**: Os dados pessoais (nome, CPF, e-mail, WhatsApp) são coletados exclusivamente para viabilizar as funcionalidades da plataforma (cadastro, autenticação, comunicação entre usuários e moderação)
+- **Minimização**: Apenas os dados estritamente necessários são solicitados durante o cadastro
+- **Segurança**: Senhas armazenadas com hash bcrypt, comunicação via HTTPS, e controle de acesso baseado em perfis
+- **Transparência**: Termos de Uso detalhados disponíveis para consulta, informando sobre coleta, uso e armazenamento de dados
+
+### Direitos dos Titulares
+Os usuários podem exercer seus direitos garantidos pela LGPD:
+- **Acesso**: Visualizar e editar seus dados pessoais através da página de perfil
+- **Correção**: Atualizar informações desatualizadas ou incorretas
+- **Eliminação**: Solicitar a exclusão da conta e de todos os dados associados (anúncios, mensagens, denúncias)
+- **Portabilidade**: Exportar seus dados pessoais mediante solicitação
+
+### Medidas de Segurança
+- Separação entre dados pessoais (`pessoa`) e credenciais (`usuario`) para reduzir superfície de ataque
+- Tokens de recuperação de senha com expiração temporária
+- Bloqueio de usuários que violam as regras da plataforma (denúncias)
+- Logs de ações administrativas para auditoria e rastreabilidade
+- Armazenamento em PostgreSQL com conexões criptografadas
+
+### Consentimento
+Ao criar uma conta, o usuário concorda explicitamente com:
+- Coleta e processamento de dados pessoais para os fins descritos
+- Exibição de informações públicas (nome, foto, bairro) nos anúncios
+- Comunicação com outros usuários através do sistema de mensagens
+- Moderação de conteúdo conforme os Termos de Uso
+
+---
+
+## �📝 Notas para Desenvolvedores
 
 ### Adicionar Nova Categoria de Anúncio
 1. Inserir no banco: `INSERT INTO categoria (id_categoria, slug, nome, icone) VALUES (...)`

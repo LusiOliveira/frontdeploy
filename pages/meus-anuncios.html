@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=person" />
     <link rel="stylesheet" href="../styles/style.css">
-    <link rel="stylesheet" href="../styles/dark-mode.css">
     <style>
         body { min-height: 100vh; display: flex; flex-direction: column; }
         .meus-main { padding-top: 80px; flex: 1; }
@@ -35,7 +34,7 @@
             bottom: -2px;
             left: 0; right: 0;
             height: 60px;
-            background: var(--white, #fff);
+            background: #fff;
             clip-path: ellipse(52% 100% at 50% 100%);
             pointer-events: none;
         }
@@ -69,7 +68,7 @@
 
         /* Toolbar */
         .meus-toolbar {
-            background: var(--white, #fff);
+            background: #fff;
             border-bottom: 1px solid #e5e7eb;
             padding: 1rem 5%;
             display: flex;
@@ -84,7 +83,7 @@
 
         .meus-contador {
             font-size: 0.92rem;
-            color: var(--muted, #6B7280);
+            color: #6B7280;
             font-weight: 500;
         }
 
@@ -122,7 +121,7 @@
             grid-column: 1 / -1;
             text-align: center;
             padding: 5rem 1rem;
-            color: var(--text-faint, #9CA3AF);
+            color: #9CA3AF;
         }
         .meus-vazio i {
             font-size: 3.5rem;
@@ -133,7 +132,7 @@
         .meus-vazio h3 {
             font-size: 1.2rem;
             font-weight: 700;
-            color: var(--text, #374151);
+            color: #374151;
             margin-bottom: 0.5rem;
         }
         .meus-vazio p { font-size: 0.95rem; margin-bottom: 1.5rem; }
@@ -189,7 +188,7 @@
         .modal-excluir-overlay.show { display: flex; }
 
         .modal-excluir-box {
-            background: var(--white, #fff);
+            background: #fff;
             border-radius: 18px;
             padding: 2rem 2.2rem;
             max-width: 380px;
@@ -205,12 +204,12 @@
         .modal-excluir-box h3 {
             font-size: 1.1rem;
             font-weight: 800;
-            color: var(--text, #1F2937);
+            color: #1F2937;
             margin-bottom: 0.5rem;
         }
         .modal-excluir-box p {
             font-size: 0.9rem;
-            color: var(--muted, #6B7280);
+            color: #6B7280;
             margin-bottom: 1.5rem;
             line-height: 1.5;
         }
@@ -223,15 +222,15 @@
             flex: 1;
             padding: 11px;
             border: 2px solid #E5E7EB;
-            background: var(--white, #fff);
+            background: #fff;
             border-radius: 10px;
             font-size: 0.9rem;
             font-weight: 700;
-            color: var(--text, #374151);
+            color: #374151;
             cursor: pointer;
             transition: border-color 0.2s;
         }
-        .btn-cancelar-excluir:hover { border-color: var(--text-faint, #9CA3AF); }
+        .btn-cancelar-excluir:hover { border-color: #9CA3AF; }
         .btn-confirmar-excluir {
             flex: 1;
             padding: 11px;
@@ -276,7 +275,7 @@
 
         /* Modal editar */
         .modal-editar-box {
-            background: var(--white, #fff);
+            background: #fff;
             border-radius: 18px;
             padding: 1.8rem 2rem;
             max-width: 580px;
@@ -296,7 +295,7 @@
         .modal-editar-header h3 {
             font-size: 1.1rem;
             font-weight: 800;
-            color: var(--text, #1F2937);
+            color: #1F2937;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -306,13 +305,13 @@
             background: none;
             border: none;
             font-size: 1.2rem;
-            color: var(--text-faint, #9CA3AF);
+            color: #9CA3AF;
             cursor: pointer;
             line-height: 1;
             padding: 4px;
             transition: color 0.2s;
         }
-        .btn-fechar-editar:hover { color: var(--text, #374151); }
+        .btn-fechar-editar:hover { color: #374151; }
 
         .edit-grid {
             display: grid;
@@ -326,7 +325,7 @@
         .edit-field label {
             font-size: 0.8rem;
             font-weight: 700;
-            color: var(--text, #374151);
+            color: #374151;
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
@@ -338,8 +337,8 @@
             border: 2px solid #E5E7EB;
             border-radius: 8px;
             font-size: 0.92rem;
-            color: var(--text, #1F2937);
-            background: var(--bg, #F9FAFB);
+            color: #1F2937;
+            background: #F9FAFB;
             font-family: inherit;
             transition: border-color 0.2s;
             resize: vertical;
@@ -350,7 +349,7 @@
         .edit-field textarea:focus {
             outline: none;
             border-color: #059669;
-            background: var(--white, #fff);
+            background: #fff;
         }
 
         .btn-editar-anuncio {
@@ -364,7 +363,7 @@
             align-items: center;
             justify-content: center;
             gap: 6px;
-            background: var(--green-tint, #F0FDF4);
+            background: #F0FDF4;
             color: #059669;
             border: 1.5px solid #10B981;
             border-radius: 999px;
@@ -428,83 +427,6 @@
             .edit-grid { grid-template-columns: 1fr; }
         }
     </style>
-
-<script>
-(function () {
-    var STORAGE_KEY = 'eletrolight-theme';
-    var html = document.documentElement;
-    var savedTheme = localStorage.getItem(STORAGE_KEY);
-    if (savedTheme === 'dark') { html.setAttribute('data-theme', 'dark'); }
-
-    document.addEventListener('DOMContentLoaded', function () {
-        var btn = document.getElementById('theme-toggle');
-        if (!btn) return;
-        function updateToggle(theme) {
-            var icon = btn.querySelector('.toggle-icon');
-            var label = btn.querySelector('.toggle-label');
-            if (theme === 'dark') {
-                if (icon) icon.textContent = '☀️';
-                if (label) label.textContent = 'Light';
-            } else {
-                if (icon) icon.textContent = '🌙';
-                if (label) label.textContent = 'Dark';
-            }
-        }
-        updateToggle(html.getAttribute('data-theme') || 'light');
-        btn.addEventListener('click', function () {
-            var current = html.getAttribute('data-theme');
-            var next = current === 'dark' ? 'light' : 'dark';
-            if (next === 'dark') { html.setAttribute('data-theme', 'dark'); }
-            else { html.removeAttribute('data-theme'); }
-            localStorage.setItem(STORAGE_KEY, next);
-            updateToggle(next);
-        });
-    });
-})();
-</script>
-
-<script>
-// Sync local CSS vars with dark mode
-(function syncDarkVars() {
-    var STORAGE_KEY = 'eletrolight-theme';
-    function applyDarkVars(isDark) {
-        var r = document.documentElement;
-        if (isDark) {
-            r.style.setProperty('--white', '#162032');
-            r.style.setProperty('--bg', '#0d1b2a');
-            r.style.setProperty('--bg-light', '#111c2d');
-            r.style.setProperty('--border', '#243452');
-            r.style.setProperty('--text', '#e2e8f0');
-            r.style.setProperty('--muted', '#94a3b8');
-            r.style.setProperty('--card-bg', '#162032');
-            r.style.setProperty('--text-mid', '#94a3b8');
-            r.style.setProperty('--text-faint', '#64748b');
-            r.style.setProperty('--green-tint', 'rgba(16,185,129,0.10)');
-            r.style.setProperty('--green-border-c', 'rgba(16,185,129,0.25)');
-            r.style.setProperty('--red-tint', 'rgba(220,38,38,0.10)');
-            r.style.setProperty('--icon-pale', '#10b981');
-            r.style.setProperty('--title-color', '#e2e8f0');
-        } else {
-            ['--white','--bg','--bg-light','--border','--text','--muted',
-             '--card-bg','--text-mid','--text-faint','--green-tint',
-             '--green-border-c','--red-tint','--icon-pale','--title-color'].forEach(function(v) {
-                r.style.removeProperty(v);
-            });
-        }
-    }
-    var saved = localStorage.getItem(STORAGE_KEY);
-    if (saved === 'dark') applyDarkVars(true);
-
-    document.addEventListener('DOMContentLoaded', function() {
-        var btn = document.getElementById('theme-toggle');
-        if (!btn) return;
-        btn.addEventListener('click', function() {
-            var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-            applyDarkVars(isDark);
-        });
-    });
-})();
-</script>
 </head>
 <body>
 

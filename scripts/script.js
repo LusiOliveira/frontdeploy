@@ -126,18 +126,17 @@ function renderPonto(ponto) {
 }
 
 const PONTOS_COLETA_FALLBACK = [
-    { id: 'fb-1', nome: 'Ecoponto Parque do Mindu', latitude: -3.0850, longitude: -60.0050, endereco: 'Av. Perimetral, s/n - Parque 10 de Novembro, Manaus - AM', horario: 'Pilhas, Baterias e Portáteis' },
-    { id: 'fb-2', nome: 'Ecoponto Arena da Amazônia', latitude: -3.0758, longitude: -60.0264, endereco: 'Av. Constantino Nery, s/n - Flores, Manaus - AM', horario: 'Informática e Celulares' },
-    { id: 'fb-3', nome: 'Ecoponto Centro', latitude: -3.1317, longitude: -60.0231, endereco: 'R. dos Barés, 212 - Centro, Manaus - AM', horario: 'Pilhas, Baterias e Portáteis' },
-    { id: 'fb-4', nome: 'Ecoponto Praça da Saudade', latitude: -3.1010, longitude: -60.0120, endereco: 'Av. Andrés Araújo, s/n - Aleixo, Manaus - AM', horario: 'Eletrodomésticos de Grande Porte' },
-    { id: 'fb-5', nome: 'Ecoponto Cidade Nova', latitude: -3.0500, longitude: -60.0000, endereco: 'Av. Noel Nutels, s/n - Cidade Nova, Manaus - AM', horario: 'Informática e Celulares' },
-    { id: 'fb-6', nome: 'Ecoponto Compensa', latitude: -3.0950, longitude: -60.0400, endereco: 'Av. Torquato Tapajós, s/n - Compensa, Manaus - AM', horario: 'Pilhas, Baterias e Portáteis' },
-    { id: 'fb-7', nome: 'Ecoponto São Jorge', latitude: -3.0200, longitude: -60.0600, endereco: 'Av. Grande Circular, s/n - São Jorge, Manaus - AM', horario: 'Eletrodomésticos de Grande Porte' },
-    { id: 'fb-8', nome: 'Ecoponto Educandos', latitude: -3.1400, longitude: -60.0150, endereco: 'Av. 7 de Setembro, s/n - Educandos, Manaus - AM', horario: 'Informática e Celulares' },
-    { id: 'fb-9', nome: 'Ecoponto Tancredo Neves', latitude: -3.0600, longitude: -60.0200, endereco: 'Av. Tancredo Neves, s/n - Tancredo Neves, Manaus - AM', horario: 'Pilhas, Baterias e Portáteis' },
-    { id: 'fb-10', nome: 'Ecoponto Jorge Teixeira', latitude: -3.0300, longitude: -59.9800, endereco: 'Av. Cosme Ferreira, s/n - Jorge Teixeira, Manaus - AM', horario: 'Eletrodomésticos de Grande Porte' },
-    { id: 'fb-11', nome: 'Ecoponto Ponta Negra', latitude: -3.0700, longitude: -60.0800, endereco: 'Av. Cel. Teixeira, s/n - Ponta Negra, Manaus - AM', horario: 'Pilhas, Baterias e Portáteis' },
-    { id: 'fb-12', nome: 'Ecoponto Alvorada', latitude: -3.0900, longitude: -60.0500, endereco: 'Av. Mário Ypiranga, s/n - Alvorada, Manaus - AM', horario: 'Informática e Celulares' }
+    { id: 'fb-1', nome: 'Bemol Manaus - Amazonas Shopping', latitude: -3.094065, longitude: -60.022903, endereco: 'Av. Djalma Batista, 482 - Parque 10 de Novembro, Manaus - AM', horario: 'Loja de Departamentos' },
+    { id: 'fb-2', nome: 'Bemol Manaus - Cidade Nova', latitude: -3.030121, longitude: -59.978195, endereco: 'Av. Noel Nutels, 1762 - Cidade Nova, Manaus - AM', horario: 'Loja de Departamentos' },
+    { id: 'fb-3', nome: 'Bemol Manaus - Manauara Shopping', latitude: -3.104381, longitude: -60.011658, endereco: 'Av. Mário Ypiranga, 1300 - Adrianópolis, Manaus - AM', horario: 'Loja de Departamentos' },
+    { id: 'fb-4', nome: 'Bemol Manaus - Matriz', latitude: -3.13005, longitude: -60.0062, endereco: 'R. Miranda Leão, 41 - Centro, Manaus - AM', horario: 'Loja de Departamentos' },
+    { id: 'fb-5', nome: 'Bemol Manaus - Shopping Grande Circular', latitude: -3.063187, longitude: -59.9502013, endereco: 'Av. Autaz Mirim, 6100 - São José Operário, Manaus - AM', horario: 'Loja de Departamentos' },
+    { id: 'fb-6', nome: 'Bemol Manaus - Shopping Ponta Negra', latitude: -3.0846448, longitude: -60.0724164, endereco: 'Av. Coronel Teixeira, 5705 - Ponta Negra, Manaus - AM', horario: 'Loja de Departamentos' },
+    { id: 'fb-7', nome: 'Bemol Manaus - Studio 5 Shopping', latitude: -3.1221557, longitude: -59.9815779, endereco: 'Av. Rodrigo Otávio, 3555 - Japiim, Manaus - AM', horario: 'Loja de Departamentos' },
+    { id: 'fb-8', nome: 'MotoStore Manaus - Amazonas Shopping', latitude: -3.094065, longitude: -60.022903, endereco: 'Av. Djalma Batista, 482 - Parque 10 de Novembro, Manaus - AM', horario: 'Loja de Motos' },
+    { id: 'fb-9', nome: 'MotoStore Manaus - Grande Circular Shopping', latitude: -3.063187, longitude: -59.9502013, endereco: 'Av. Autaz Mirim, 6100 - São José Operário, Manaus - AM', horario: 'Loja de Motos' },
+    { id: 'fb-10', nome: 'MotoStore Manaus - Shopping Manauara', latitude: -3.104381, longitude: -60.011658, endereco: 'Av. Mário Ypiranga, 1300 - Adrianópolis, Manaus - AM', horario: 'Loja de Motos' },
+    { id: 'fb-11', nome: 'MotoStore Manaus - Sumauma Shopping', latitude: -3.030121, longitude: -59.978195, endereco: 'Av. Noel Nutels, 1762 - Cidade Nova, Manaus - AM', horario: 'Loja de Motos' }
 ];
 
 async function carregarPontosColeta() {

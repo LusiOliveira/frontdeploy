@@ -648,9 +648,6 @@ main {
     text-align: center;
     gap: 1.2rem;
     margin-bottom: 2.5rem;
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
 }
 
 .servicos-titulo-bloco .subtitle {
@@ -697,10 +694,6 @@ main {
     flex-wrap: wrap;
     gap: 10px;
     margin-bottom: 2rem;
-    justify-content: center;
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
 }
 
 .cat-btn {
@@ -736,9 +729,6 @@ main {
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: 1.5rem;
     margin-bottom: 2.5rem;
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
 }
 
 .anuncio-card {
