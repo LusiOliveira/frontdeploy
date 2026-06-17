@@ -837,14 +837,22 @@
                 btn.disabled = true;
                 btn.textContent = 'Enviando…';
                 try {
-                    await window.SupabaseService.enviarDenuncia({
+                    const denunciaPayload = {
                         tipo,
                         alvo_email: ownerEmail,
                         alvo_titulo: anuncio.titulo,
                         motivo,
                         descricao: descricao || null,
                         denunciante_email: session.email,
-                        status: 'pendente'
+                        status: 'aberta',
+                        anuncio_id: anuncio.id || null,
+                        usuario_id: anuncio.usuarioId || null
+                    };
+
+                    await window.SupabaseService.enviarDenuncia({
+                        ...denunciaPayload,
+                        anuncio_id: tipo === 'anuncio' ? denunciaPayload.anuncio_id : null,
+                        usuario_id: denunciaPayload.usuario_id
                     });
                     document.getElementById('modal-denuncia').classList.add('hidden');
                     document.getElementById('den-desc').value = '';

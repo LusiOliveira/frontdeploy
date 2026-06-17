@@ -99,7 +99,9 @@
         .denuncia-footer { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
         .denuncia-reporter { font-size: 0.75rem; color: var(--muted); }
         .d-status { font-size: 0.7rem; font-weight: 700; padding: 3px 10px; border-radius: 999px; }
-        .d-status.pendente  { background: #FEF3C7; color: #D97706; }
+        .d-status.aberta,
+        .d-status.pendente,
+        .d-status.em_analise { background: #FEF3C7; color: #D97706; }
         .d-status.resolvida { background: #D1FAE5; color: #059669; }
         .btn-resolver { background: var(--primary); color: white; border: none; border-radius: 8px; padding: 6px 14px; font-size: 0.78rem; font-weight: 600; cursor: pointer; transition: background 0.2s; }
         .btn-resolver:hover { background: var(--primary-dark); }
@@ -319,7 +321,7 @@
     <!-- ── Tab: Denúncias ── -->
     <div class="tab-panel" id="tab-denuncias">
         <div class="filtro-bar">
-            <button class="filtro-btn active" data-filtro="pendente">Pendentes</button>
+            <button class="filtro-btn active" data-filtro="aberta">Abertas</button>
             <button class="filtro-btn" data-filtro="resolvida">Resolvidas</button>
             <button class="filtro-btn" data-filtro="todas">Todas</button>
         </div>
@@ -493,7 +495,7 @@
     })();
 
     // ── Filtro denúncias ──
-    let filtroAtual = 'pendente';
+    let filtroAtual = 'aberta';
     document.querySelectorAll('.filtro-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             document.querySelectorAll('.filtro-btn').forEach(b => b.classList.remove('active'));
@@ -592,11 +594,11 @@
     async function carregarDenuncias() {
         try {
             todasDenuncias = await window.SupabaseService.getDenuncias();
-            const pendentes = todasDenuncias.filter(d => d.status === 'pendente').length;
+            const abertas = todasDenuncias.filter(d => d.status === 'aberta' || d.status === 'em_analise').length;
             document.getElementById('stat-denuncias').textContent = todasDenuncias.length;
             const badge = document.getElementById('badge-denuncias');
-            badge.textContent = pendentes;
-            badge.classList.toggle('zero', pendentes === 0);
+            badge.textContent = abertas;
+            badge.classList.toggle('zero', abertas === 0);
             renderDenuncias();
         } catch (e) { console.error(e); }
     }
@@ -605,13 +607,15 @@
         const el = document.getElementById('lista-denuncias');
         const filtradas = filtroAtual === 'todas'
             ? todasDenuncias
-            : todasDenuncias.filter(d => d.status === filtroAtual);
+            : todasDenuncias.filter(d => filtroAtual === 'aberta'
+                ? (d.status === 'aberta' || d.status === 'em_analise')
+                : d.status === filtroAtual);
 
         if (!filtradas.length) {
             el.innerHTML = `<div class="empty-state">
                 <i class="fa-solid fa-flag"></i>
                 <h3>Nenhuma denúncia</h3>
-                <p>${filtroAtual === 'pendente' ? 'Sem denúncias pendentes.' : 'Sem registros para este filtro.'}</p>
+                <p>${filtroAtual === 'aberta' ? 'Sem denúncias abertas.' : 'Sem registros para este filtro.'}</p>
             </div>`;
             return;
         }
@@ -619,6 +623,9 @@
         el.innerHTML = filtradas.map(d => {
             const isPerfil = d.tipo === 'perfil';
             const data = new Date(d.created_at).toLocaleDateString('pt-BR');
+            const statusLabel = d.status === 'resolvida'
+                ? 'Resolvida'
+                : (d.status === 'em_analise' ? 'Em análise' : 'Aberta');
             return `<div class="denuncia-card">
                 <div class="denuncia-icon ${d.tipo}">
                     <i class="fa-solid fa-${isPerfil ? 'user-xmark' : 'rectangle-xmark'}"></i>
@@ -633,8 +640,8 @@
                             <i class="fa-solid fa-user"></i> ${d.denunciante_email} &middot; ${data}
                         </span>
                         <div style="display:flex;align-items:center;gap:8px">
-                            <span class="d-status ${d.status}">${d.status === 'pendente' ? 'Pendente' : 'Resolvida'}</span>
-                            ${d.status === 'pendente'
+                            <span class="d-status ${d.status}">${statusLabel}</span>
+                            ${d.status !== 'resolvida'
                                 ? `<button class="btn-tomar-acao btn-resolver" data-id="${d.id}"><i class="fa-solid fa-gavel"></i> Tomar Ação</button>`
                                 : ''}
                         </div>

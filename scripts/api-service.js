@@ -245,12 +245,17 @@ async function rejeitarAnuncio(id) {
 
 function normalizeDenuncia(d) {
     if (!d) return d;
+    const statusRaw = (d.status || 'aberta').toString().trim().toLowerCase();
+    const statusNormalizado = statusRaw === 'pendente' ? 'aberta' : statusRaw;
     return {
         ...d,
         alvo_email:        d.alvoEmail        || d.alvo_email,
         alvo_titulo:       d.alvoTitulo       || d.alvo_titulo,
         denunciante_email: d.denuncianteEmail || d.denunciante_email,
-        created_at:        d.dataCriacao      || d.created_at
+        created_at:        d.dataCriacao      || d.created_at,
+        usuario_id:        d.usuarioId        || d.usuario_id,
+        anuncio_id:        d.anuncioId        || d.anuncio_id,
+        status:            statusNormalizado
     };
 }
 
@@ -267,7 +272,9 @@ async function enviarDenuncia(denuncia) {
         motivo:            denuncia.motivo,
         descricao:         denuncia.descricao          || null,
         denuncianteEmail:  denuncia.denunciante_email  || denuncia.denuncianteEmail,
-        status:            denuncia.status             || 'pendente'
+        status:            denuncia.status             || 'aberta',
+        usuarioId:         denuncia.usuario_id         || denuncia.usuarioId || null,
+        anuncioId:         denuncia.anuncio_id         || denuncia.anuncioId || null
     };
     return apiFetch('/denuncias', { method: 'POST', body: payload });
 }
@@ -528,4 +535,3 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
-
